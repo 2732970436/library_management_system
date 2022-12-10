@@ -73,9 +73,9 @@ const checkAccount = (rule:any,value:string,callback:any) => {
   if (!value.match("^[a-zA-Z]+$")) {
     accountFlag.value = false;
     callback(new Error("Please Input Letter"));
-  } else if (value.length < 6) {
+  } else if (value.length < 2) {
     accountFlag.value = false;
-    callback(new Error("please input more than six letter"))
+    callback(new Error("please input more than 2 letter"))
   } else {
     accountFlag.value = true;
     callback();
@@ -160,7 +160,7 @@ const register = () => {
     }
   }).catch((err) => {
     ElMessage({
-      message:"服务器没开 去开了",
+      message:"服务器没开",
       type:"error"
     })
   })

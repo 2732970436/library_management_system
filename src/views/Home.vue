@@ -27,30 +27,28 @@ const login = (para:{account:String,password:String,type:"Student" | "Admin",che
   const results = getLogin(para)
   if (results) {
     results.then((res) => {
-      console.log(res.headers)
-       let code:number = res.data.err_code;
-       if (code === 300) {
+      const token = res.headers.token;
+       let code:number = res.data.code;
+       if (code != 200) {
          ElMessage({
          message: res.data.message,
          type: 'error',
          showClose:true
        })    
-       } else if (code === 200) {
+       } else {
         ElMessage({
          message: res.data.message,
          type: 'success',
          showClose:true
         })
-        window.localStorage.setItem("token","")
-        router.replace('/student');
+        window.localStorage.setItem("token",token)
+        router.replace(para.type.toLowerCase());
         }
     }).finally(() => {
       loading.close();
     })
   }
-   
-  
-  }
+}
 
   const register = () => {
     router.push("/register")
