@@ -1,36 +1,34 @@
 export interface Book {
   id:number,
-  bookname:string,
+  bookName:string,
   store:number,
+  remain:number;
   author:string,
+  type:string,
   price:number,
   index:number,
   isUpdate:boolean,
   content:string,
   isAdd:boolean;
 }
+/**
+ * id为-1时表示此数据是新增数据，暂无id
+ */
 
 export class BookC implements Book {
-  public id:number;
-  public bookname:string;
-  public store:number;
-  public author:string;
-  public price:number;
-  public index:number;
-  public isUpdate:boolean;
-  public content:string;
-  public isAdd: boolean = false;
+  public id:number = -1;
+  public bookName:string = "";
+  public store:number = 0;
+  public author:string = "";
+  public price:number = 0.00;
+  public index:number = 0;
+  public remain:number = 0;
+  public type:string = "暂定";
+  public isUpdate:boolean = true;
+  public content:string = "";
+  public isAdd: boolean = true;
+
  
-  constructor(id:number,book:string,store:number,author:string,price:number,index:number,isUpdate:boolean,content:string) {
-    this.id = id;
-    this.bookname = book;
-    this.store = store;
-    this.author = author;
-    this.price = price;
-    this.index = index;
-    this.isUpdate = isUpdate;
-    this.content = content
-  }
  }
 
 

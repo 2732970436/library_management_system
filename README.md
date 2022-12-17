@@ -13,7 +13,7 @@ npm run serve
 ### Compiles and minifies for production
 ```
 npm run build
-```
+```S
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

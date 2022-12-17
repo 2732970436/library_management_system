@@ -39,7 +39,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
-import url from "@/ntework/network_url"
+import url from "@/network/network_url"
 
 import { ElMessage } from 'element-plus';
 

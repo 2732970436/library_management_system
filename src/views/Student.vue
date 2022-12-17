@@ -1,8 +1,8 @@
 <template>
   <div>
-  <el-table :data="filterTableData" height="500" style="width:100vw" >
+  <el-table :data="filterTableData" height="70%" style="width:100%" >
     <el-table-column type="selection" width="55" />
-    <el-table-column prop="bookname" label="Name" style="width:20vw"/>
+    <el-table-column prop="bookName" label="Name" style="width:20vw"/>
     <el-table-column prop="store" label="Store" style="width:20vw"/>
     <el-table-column prop="author" label="Author" style="width:20vw"/>
     <el-table-column prop="price" label="Price" style="width:20vw"/>
@@ -37,11 +37,9 @@ const store = useStore();
 const search = ref('')
 // 放置修改的临时数据
 const tempBook = ref<BookC>(
-  new BookC(0,"",0,"",0,0,false,"")
+  new BookC()
 );
 
-let a:string = "";
-a = 10;
 
 let dialogFormVisible = ref(false);
 
@@ -51,14 +49,14 @@ const storeFlag = ref(true);
 
 const updateButtonFlag = ref(true)
 
-let books = store.state.books
+let books = store.state.book.books
 
 // 搜索数据行
 const filterTableData = computed(() =>
   books.filter(
     (data) =>
       !search.value ||
-      data.bookname.toLowerCase().includes(search.value.toLowerCase())
+      data.bookName.toLowerCase().includes(search.value.toLowerCase())
   )
 )
 
