@@ -18,7 +18,7 @@
     @validate = "validate"
   >
     <el-form-item :label="lang? '账户名': 'Account'" prop="account">
-      <el-input v-model="formLabelAlign.account" maxlength="18" minlength="6" clearable class="input_item"/>
+      <el-input v-model="formLabelAlign.account" maxlength="18" minlength="2" clearable class="input_item"/>
     </el-form-item>
     <el-form-item :label="lang? '密码' : 'Password'" prop="password">
       <el-input v-model="formLabelAlign.password" type="password" maxlength="18" minlength="6" clearable class="input_item"/>
@@ -78,12 +78,12 @@ const ensurePasswordFlag = ref(false);
 const emailFLag = ref(true)
 const registerButtonFlag = ref(false);
 const checkAccount = (rule:any,value:string,callback:any) => {
-  if (!value.match("^[a-zA-Z]+$")) {
+  if (!value.match("^[a-zA-Z0-9|#|@|\.]+$")) {
     accountFlag.value = false;
-    callback(new Error("Please Input Letter"));
+    callback(new Error(lang? '请输入字母或数字': "Please Input Letter"));
   } else if (value.length < 2) {
     accountFlag.value = false;
-    callback(new Error("please input more than 2 letter"))
+    callback(new Error(lang? '用户名最短为2位': "please input more than 2 letter"))
   } else {
     accountFlag.value = true;
     callback();
@@ -91,12 +91,12 @@ const checkAccount = (rule:any,value:string,callback:any) => {
 }
 
 const checkPassword = (rule:any,value:string,callback:any) => {
-  if (!value.match("^[0-9A-Za-z]+$")) {
+  if (!value.match("^[0-9A-Za-z|\.|#|!|%|^|&|*|\(|\)|\?|+|-|\/]+$")) {
     passwordFlag.value = false;
-    callback(new Error("content must contain only letter or digital"))
+    callback(new Error(lang? '密码只能包含数组字母和某些特殊字符' : 'content must contain only letter or digital'))
   } else if (value.length < 6) {
     passwordFlag.value = false;
-    callback(new Error("passwrod length must greater than six"))
+    callback(new Error(lang? '密码必须大于6位': "passwrod length must greater than six"))
   } else {
     passwordFlag.value = true;
     callback();
@@ -109,7 +109,7 @@ const checkEnsurePassword = (rule:any,value:string,callback:any) => {
     callback()
   } else {
     ensurePasswordFlag.value = false;
-    callback("Not the same as password")
+    callback(lang? '密码不同': "Not the same as password")
   }
 }
 
@@ -120,7 +120,7 @@ const  checkEmail = (rule:any,value:string,callback:any) => {
       callback();
   } else if (value) {
     emailFLag.value = false
-    callback(new Error("The email format is wrong"));
+    callback(new Error(lang? '错误的邮件格式': "The email format is wrong"));
   } else {
     emailFLag.value = true;
     callback();
@@ -155,9 +155,9 @@ const register = () => {
     }); 
     window.localStorage.setItem("token", token);
     if (formLabelAlign.type === "Student") {
-      router.replace("/index/student")
+      router.replace("/index/student/bookInfo")
     } else if (formLabelAlign.type === "Admin") {
-      router.replace("/index/admin")
+      router.replace("/index/admin/bookInfo")
     }
       break;
       default: ms({

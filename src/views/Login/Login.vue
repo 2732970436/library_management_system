@@ -2,13 +2,16 @@
   <div class="home">
     <Title>
       <template #title>
-        {{lang? '图书管理系统': 'library management system'}}
+        <span style="margin:auto">{{lang? '图书管理系统': 'library management system'}}</span>
+      </template>
+      <template #suffix>
+        <el-button style="margin: auto;" type="primary" size="large" @click="register()">{{lang? '注册': 'Sign up'}}</el-button>
       </template>
     </Title>
     <div class="login_warp">
       <Login @login="login"></Login>
     </div>
-    <el-link @click="register()" class="register">{{lang? '注册': 'Sign up'}}</el-link>
+    
   </div>
 </template>
 
@@ -70,10 +73,5 @@ const login = (para:{account:String,password:String,type:"Student" | "Admin",che
     display: flex;
     justify-content: center;
   }
-  .register {
-    position:absolute;
-    right: 20px;
-    top: 60px;
-    font-size: 16px;
-  }
+
 </style>
