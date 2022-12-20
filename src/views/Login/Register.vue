@@ -1,6 +1,10 @@
 <template>
  
-  <Title :title="'Register'"></Title>
+  <Title>
+    <template #title>
+      {{}}
+    </template>
+  </Title>
   <el-radio-group v-model="labelPosition" label="label position">
   </el-radio-group>
   <div style="margin: 20px" />
@@ -13,20 +17,20 @@
     :rules="rule"
     @validate = "validate"
   >
-    <el-form-item label="Account" prop="account">
+    <el-form-item :label="lang? '账户名': 'Account'" prop="account">
       <el-input v-model="formLabelAlign.account" maxlength="18" minlength="6" clearable class="input_item"/>
     </el-form-item>
-    <el-form-item label="Password" prop="password">
+    <el-form-item :label="lang? '密码' : 'Password'" prop="password">
       <el-input v-model="formLabelAlign.password" type="password" maxlength="18" minlength="6" clearable class="input_item"/>
     </el-form-item>
-    <el-form-item label="ConfirmPassword" prop="ensurePassword">
+    <el-form-item :label="lang? '确认密码': 'ConfirmPassword'" prop="ensurePassword">
       <el-input  type="password" v-model="formLabelAlign.ensurePassword" clearable></el-input>
     </el-form-item>
-    <el-form-item label="Email" prop="email">
-      <el-input v-model="formLabelAlign.email" placeholder="You can choose not to fill in this field" clearable></el-input>
+    <el-form-item :label="lang? '邮箱地址': 'Email'" prop="email">
+      <el-input v-model="formLabelAlign.email" :placeholder="lang? '你可以选择是否填写该字段': 'You can choose not to fill in this field'" clearable></el-input>
     </el-form-item>
-    <el-form-item label="Identity">
-      <el-select v-model="formLabelAlign.type" class="select" placeholder="choose your identity" size="large" :collapse-tags="true">
+    <el-form-item :label="lang? '身份': 'Identity'">
+      <el-select v-model="formLabelAlign.type" class="select" :placeholder="lang? '选择你的身份': 'choose your identity'" size="large" :collapse-tags="true">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -35,19 +39,22 @@
     />
   </el-select>
   </el-form-item>
-  <el-button type="primary" @click="register()" :disabled ="!registerButtonFlag" >Register</el-button>
+  <el-button type="primary" @click="register()" :disabled ="!registerButtonFlag" >{{lang? '注册': 'Register'}}</el-button>
   </el-form>
 </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import Title from '@/components/title.vue';
+import { computed, reactive, ref } from 'vue'
+import Title from '@/components/common/tab_bar.vue';
 
 import { getRegister } from '@/network/user';
 import { ElMessage } from 'element-plus';
 import router from '@/router';
 import { ms } from '@/tools/message';
+import { store } from '@/store';
+
+const lang = computed(() => store.state.config.lang)
 
 interface Format {
   account: string,
@@ -129,11 +136,11 @@ const rule = reactive({
 const options = [
   {
     value: 'Student',
-    label: 'Student',
+    label: lang? '学生': 'Student',
   },
   {
     value: 'Admin',
-    label: 'Admin',
+    label: lang? '管理员': 'Admin',
   }
 ]
 
@@ -148,9 +155,9 @@ const register = () => {
     }); 
     window.localStorage.setItem("token", token);
     if (formLabelAlign.type === "Student") {
-      router.replace("/student")
+      router.replace("/index/student")
     } else if (formLabelAlign.type === "Admin") {
-      router.replace("/admin")
+      router.replace("/index/admin")
     }
       break;
       default: ms({

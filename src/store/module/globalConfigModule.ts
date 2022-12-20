@@ -1,12 +1,22 @@
 import {ms} from "@/tools/message"
+import { StoreOptions } from "vuex";
 
-const globalConfigModule = {
+const globalConfigModule:StoreOptions<GlobalConfigState>  = {
       state: {
-        lang:0
+        lang:1,
+        bookPageSize:10,
       },
       mutations:{
-        changeLang(state:globalConfigState ,lang:number) {
+        /**
+         * 改变语言
+         * @param state 上下文
+         * @param lang 参数
+         */
+        changeLang(state:GlobalConfigState ,lang:number) {
            state.lang = lang;
+        },
+        changeBookPageSize(state, size:number) {
+          state.bookPageSize = size;
         }
       },
       actions:{
@@ -15,11 +25,12 @@ const globalConfigModule = {
   }
     
     // 为了使用vuex的时候bookstate能有类型
-    export interface globalConfigState {
+    export interface GlobalConfigState {
       /**
-       * lang为语言选择，0为中文，1为英文
+       * lang为语言选择，0为英文，1为中文
        */
-       lang:number
+       lang:number,
+       bookPageSize:number
     }
 
 export default globalConfigModule;

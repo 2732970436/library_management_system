@@ -1,28 +1,35 @@
 <template>
   <div class="home">
-    <Title></Title>
+    <Title>
+      <template #title>
+        {{lang? '图书管理系统': 'library management system'}}
+      </template>
+    </Title>
     <div class="login_warp">
       <Login @login="login"></Login>
     </div>
-    <el-link @click="register()" class="register">Sign up</el-link>
+    <el-link @click="register()" class="register">{{lang? '注册': 'Sign up'}}</el-link>
   </div>
 </template>
 
 <script lang="ts" setup>
-import Title from "@/components/title.vue"
+import Title from "@/components/common/tab_bar.vue"
 import Login from "@/components/login.vue"
 import {getLogin} from "@/network/user"
 import { useRouter, useRoute } from 'vue-router'
 import { ElLink, ElLoading } from "element-plus";
 import { ms } from "@/tools/message";
+import { computed } from "@vue/reactivity";
+import { store } from "@/store";
 const route = useRoute()
 const router = useRouter()
 
+const lang = computed(() => store.state.config.lang)
 
 const login = (para:{account:String,password:String,type:"Student" | "Admin",checkCode:string}) => {
   const loading = ElLoading.service({
     lock: true,
-    text: 'Submitting',
+    text: lang? '提交中': 'Submitting',
     background: 'rgba(0, 0, 0, 0.7)',
   })
   const results = getLogin(para)
@@ -43,7 +50,7 @@ const login = (para:{account:String,password:String,type:"Student" | "Admin",che
          showClose:true
         })
         window.localStorage.setItem("token",token)
-        router.replace(para.type.toLowerCase());
+        router.replace(`index/${para.type.toLowerCase()}/bookInfo`);
         }
     }).finally(() => {
       loading.close();

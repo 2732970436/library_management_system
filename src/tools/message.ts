@@ -1,5 +1,5 @@
 import { store } from "@/store";
-import {ElMessage, MessageOptions, MessageParams} from "element-plus";
+import { ElLoading, ElLoadingService, ElMessage, ElMessageBox, ElMessageBoxOptions, LoadingOptionsResolved, MessageOptions, MessageParams, messageType } from "element-plus";
 import { computed } from "vue";
 
 // /**
@@ -37,8 +37,8 @@ import { computed } from "vue";
 //     } else {
 //         amessage = mymessage;
 //     }
-    
-    
+
+
 
 //     ElMessage({
 //         message: amessage,
@@ -66,41 +66,68 @@ const lang = computed(() => store.state.config.lang)
 /**
  * @deprecated 此方式将于3.0版本废除
  */
-export function ms(options:MessageOptions): void;
-export function ms(chinese:string,english:string, mytype?:'s' | 'w' | 'i' | 'e', options?:MessageOptions): void
+export function ms(options: MessageOptions): void;
 
-export function ms (chinese:MessageOptions | string, english?:string, mytype?: 's' | 'w' | 'i' | 'e', options?:MessageOptions) {
-    
-    
-    
+export function ms(chinese: string, english: string, mytype: 's' | 'w' | 'i' | 'e', options?: MessageOptions): void
+
+export function ms(chinese: MessageOptions | string, english?: string, mytype?: 's' | 'w' | 'i' | 'e', options?: MessageOptions) {
+
+
+
     //如果第一个参数为字符串，则表示是新版
     if (typeof chinese === "string") {
         // 如果用户没有传指定的options,则准备一个默认的options对象
-    if (!options) {
-        options = {
-          type:"info",
-          duration:3000,
-          showClose:true,
-          grouping:true
+        if (!options) {
+            options = {
+                type: "info",
+                duration: 3000,
+                showClose: true,
+                grouping: true
+            }
         }
-      } 
         options!.message = lang.value ? chinese : english
-
-        let type = options.type;
-    // 如果用户传了mytype则进行替换
+        // 如果用户传了mytype则进行替换
         switch (mytype) {
-                        case "s" : type = "success"; break;
-                        case "i" : type = "info"; break;
-                        case "w" : type = "warning"; break;
-                        case "e" : type = "error"; break;
-                        default: type = "info"
+            case "s": options.type = "success"; break;
+            case "i": options.type = "info"; break;
+            case "w": options.type = "warning"; break;
+            case "e": options.type = "error"; break;
+            default: options.type = "info"
         }
 
         ElMessage(options)
-    // 如果第一个参数是对象，则兼容ELmessage写法
+        // 如果第一个参数是对象，则兼容ELmessage写法
     } else if (typeof chinese === "object") {
         ElMessage(options)
     }
-    
 
+
+}
+
+/**
+ * 加载
+ * @param chinese 中文提示
+ * @param english 英文提示
+ * @param lock    是否锁屏，默认不锁
+ * @param options 可空 原版的Options
+ */
+export function ld(chinese: string, english: string, lock: boolean = false, options: Partial<Omit<LoadingOptionsResolved, "target" | "parent"> & {
+    target: string | HTMLElement;
+    body: boolean;
+}> = { background: 'rgba(0, 0, 0, 0.7)', text: lang ? "加载中" : "loading" }) {
+    options.text = lang ? chinese : english;
+    options.lock = lock;
+
+    return ElLoading.service(options)
+}
+
+export function mb(contentC:string,contentE:string,type:messageType , options?:ElMessageBoxOptions) {
+    if (!options) {
+      options = {
+            confirmButtonText: lang? '确定': 'OK',
+            cancelButtonText: lang? '取消': 'Cancel',
+      }
+    }
+    options.type = type;
+    return ElMessageBox.confirm(lang?  contentC: contentE, options);
 }

@@ -1,4 +1,5 @@
 import { BookC } from "@/interface/Book";
+import { store } from "@/store";
 import axios from "axios";
 import url from "./network_url";
 
@@ -49,5 +50,5 @@ export function getBooks() {
  */
 
 export function getBooksByPage(page: number) {
-  return axios.get(url + "/library/book/" + page);
+  return axios.get(`${url}/library/book/${page}/${store.state.config.bookPageSize}`);
 }

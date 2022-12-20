@@ -1,11 +1,7 @@
 import { BookC } from "@/interface/Book"
-import {ms} from "@/tools/message"
+import {ld, ms} from "@/tools/message"
 import { addBook, delBook, updateBook , getBooksByPage} from '@/network/book'
-import { computed } from "vue";
-import { store } from "..";
-import { ActionContext, Module, Store, StoreOptions } from "vuex";
-
-
+import { StoreOptions } from "vuex";
 
 
 const bookModule:StoreOptions<bookState> = {
@@ -13,7 +9,8 @@ const bookModule:StoreOptions<bookState> = {
         books:[],
         isUpdate:false,
         delIds:new Set<number>(),
-        page:0
+        currentPage:0,
+        bookCounts:0
       },
       mutations:{
         /**
@@ -22,6 +19,7 @@ const bookModule:StoreOptions<bookState> = {
          * @param book 被添加的书本信息
          */
         addBook(bookstate:bookState , book:BookC) {
+          book.isAdd = true;
           //如果有书名重复了则提醒用户正在添加一本书名重复的书
           //后期考虑给用户提供一个按钮，点击将当前的库存添加到已存在的书名书的库存量中
           const overlap = bookstate.books.find((item) => item.bookName === book.bookName)
@@ -72,33 +70,68 @@ const bookModule:StoreOptions<bookState> = {
         // 清除被删除数组
         cleanIds(bookstate) {
           bookstate.delIds.clear()
+        },
+        setPage(state,page:number) {
+          state.currentPage = page;
+        },
+        setBookCount(state,count:number) {
+           state.bookCounts = count
         }
     
       },
       actions:{
+         updateBookPage(context, page:number) {
+           context.commit("setPage", page);
+           context.dispatch("getBooksFromNet",page)
+         },
+
         /**
          * 从服务器获取书籍信息
          * @param context 
-         * @param page 
+         * @param page 页数
          */
         getBooksFromNet(context, page:number) {
+          const l = ld("加载数据中","loading data",true)
           getBooksByPage(page).then((res) => {
             // 将服务器返回的书籍替换当前的书籍
-            context.commit("replaceBooks",res.data.data);
+            context.commit("replaceBooks",res.data.data.records);
+            context.commit("setBookCount", res.data.data.total)
+          }).finally(() => {
+            l.close()
           })
         },
         // 更新所有新增的，删除的。修改的数据到服务器
         updateBooks(context) {
-          Promise.all([addBook(context.state.books.filter((item: { isAdd: any }) => item.isAdd)),updateBook(context.state.books.filter((item: { isUpdate: any }) => item.isUpdate)),delBook(Array.from(context.state.delIds))]).then((values) => {
+          // 将需要的网络请求加入promise数组
+          const promiseArr = [];
+          const addBooks = context.state.books.filter((item: { isAdd: any }) => item.isAdd);
+          const updateBooks = context.state.books.filter((item: { isUpdate: boolean }) => item.isUpdate);
+          const delBooks = Array.from(context.state.delIds)
+          
+          if (addBooks.length != 0) {
+            promiseArr.push(addBook(addBooks))
+          }
+          if (updateBooks.length != 0) {
+            promiseArr.push(updateBook(updateBooks))
+          }
+          if (delBooks.length != 0) {
+             promiseArr.push(delBook(delBooks))
+          }
+          if (promiseArr.length === 0) {
+            return ms("无需要提交的操作", 'no action', "e")
+          }
+                    
+
+          Promise.all(promiseArr).then((values) => {
             // 如果新增，删除，修改都成功
-            if (values[0].data.code === 200 && values[1].data.code === 200 && values[2].data.code === 200) {
+            if (values.every((value) => value.data.code === 200)) {
               ms("操作成功", "operate success", "s")
               context.commit("submitBookUpdate");
               context.commit("updateFlag",false);
               context.commit("cleanIds");
               // 重新从服务器上获取数据，可能导致性能变差，后期优化
-              context.dispatch("getBooksFromNet", context.state.page);
-            } 
+              context.dispatch("getBooksFromNet", context.state.currentPage);
+            }
          }).catch((values) => {
            ms("操作失败","Operate failure","e")
          })
@@ -111,7 +144,8 @@ const bookModule:StoreOptions<bookState> = {
       books:Array<BookC>,
       isUpdate:boolean,
       delIds:Set<number>,
-      page:number
+      currentPage:number,
+      bookCounts:number
     }
 
 export default bookModule;

@@ -1,6 +1,6 @@
 <template>
   <div>
-  <el-table :data="filterTableData" style="width:100vw;height: var(100vh - 61px);" >
+  <el-table :data="filterTableData" style="width:100%;height: 100%;" >
     <el-table-column type="selection" width="55" />
     <el-table-column prop="account" label="account" style="width:20vw"/>
     <el-table-column prop="password" label="password(md5)" style="width:20vw"/>
@@ -11,14 +11,8 @@
       </template>
       <template #default="scope">
         <el-button text @click="userEdit(scope.$index,scope.row)"
-    >Edit</el-button
-  >
-        <el-button
-          size="small"
-          type="danger"
-          @click="bookDelete(scope.$index, scope.row)"
-          >Delete</el-button
-        >
+    >Edit</el-button>
+        <el-button  size="small"  type="danger"  @click="bookDelete(scope.$index, scope.row)"></el-button>
       </template>
     </el-table-column>
   </el-table>

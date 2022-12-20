@@ -4,23 +4,29 @@
   <el-menu
     default-active="bookInfo"
   >
-    <el-sub-menu index="book">
+    <el-menu-item index="book">
       <template #title>
         <el-icon><Collection /></el-icon>
-        <span>书籍管理</span>
+        <span>{{lang? '书籍管理' : 'BOOK'}}</span>
       </template>
-    </el-sub-menu>
+    </el-menu-item>
+    <el-menu-item index="user">
+      <template #title>
+        <el-icon><User /></el-icon>
+        <span>{{lang? '用户管理' : 'USER'}}</span>
+      </template>
+    </el-menu-item>
     <el-menu-item index="borrowInfo">
       <el-icon><Operation /></el-icon>
-      <template #title>借阅管理</template>
+      <template #title>{{lang? '借阅管理': 'BORROW'}}</template>
     </el-menu-item>
     <el-menu-item index="setting">
       <el-icon><Setting /></el-icon>
-      <template #title>系统设置</template>
+      <template #title>{{lang? '系统设置': 'SETTING'}}</template>
     </el-menu-item>
     <el-menu-item index="4">
       <el-icon><UserFilled /></el-icon>
-      <template #title>个人资料</template>
+      <template #title>{{lang? '个人资料': 'PROFILE'}}</template>
     </el-menu-item>
   </el-menu>
 
@@ -34,12 +40,13 @@
 
 <script lang="ts" setup>
 
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import {
   Setting,
   Collection,
   Operation,
-  UserFilled
+  UserFilled,
+  User
 } from '@element-plus/icons-vue'
 import {useRoute, useRouter} from 'vue-router'
 
@@ -50,13 +57,13 @@ const route = useRoute();
 const router = useRouter();
 
 
-const addFlag = ref(false);
-const infoFlag = ref(true);
-const userFlag = ref(false);
+
+const lang = computed(() => store.state.config.lang)
+
 
 // 改变页面状态
-const change = (item:"bookAdd" | "bookInfo" | "userInfo") => {
-    // store.commit("changeActive", item)
+const changeActive = (item: "bookInfo" | "userInfo") => {
+    
 }
 
 

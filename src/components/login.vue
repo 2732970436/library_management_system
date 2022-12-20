@@ -11,13 +11,13 @@
     status-icon
     :rules="rules"
   >
-    <el-form-item label="Account" prop="account">
+    <el-form-item :label="lang? '账户': 'Account'" prop="account">
       <el-input v-model="formLabelAlign.account" clearable class="input_item"/>
     </el-form-item>
-    <el-form-item label="Password" prop="password">
+    <el-form-item :label="lang? '密码': 'Password'" prop="password">
       <el-input v-model="formLabelAlign.password" clearable class="input_item" type="password"/>
     </el-form-item>
-    <el-form-item label="Identity">
+    <el-form-item :label="lang? '身份': 'Identity'">
       <el-select v-model="formLabelAlign.type" class="select" placeholder="choose your identity" size="large" :collapse-tags="true">
     <el-option
       v-for="item in options"
@@ -27,21 +27,25 @@
     />
   </el-select>
   </el-form-item>
-  <el-form-item label="verifyCode" prop="verifyCode" >
+  <el-form-item :label="lang? '验证码': 'verifyCode'" prop="verifyCode" >
       <el-input v-model="formLabelAlign.checkCode" clearable class="input_item verifycode"/>
       <el-image :src='url+imgUrl' class="verify_img" @click="verifyImgChange()" />
    </el-form-item>
-  <el-button type="primary" @click="login(ruleFormRef)">Login</el-button>
+  <el-button type="primary" @click="login(ruleFormRef)">{{lang? '登录': 'Login'}}</el-button>
   </el-form>
 
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 import url from "@/network/network_url"
 
 import { ElMessage } from 'element-plus';
+import { ms } from '@/tools/message';
+import { store } from '@/store';
+
+const lang = computed(() => store.state.config.lang)
 
 const labelPosition = ref('right')
 const imgUrl = ref("/library/api/checkCode");
@@ -54,11 +58,11 @@ const formLabelAlign = reactive({
 const options = [
   {
     value: 'Student',
-    label: 'Student',
+    label: lang? '学生': 'Student',
   },
   {
     value: 'Admin',
-    label: 'Admin',
+    label:lang? '管理员': 'Admin',
   }
 ]
 
@@ -68,11 +72,7 @@ const login = (form:FormInstance | undefined) => {
   form?.validate().then((valid) => {
     emit("login",formLabelAlign)
   }).catch(() => {
-    ElMessage({
-    message: "please fill all item before you submit",
-    type:"error",
-    showClose:true
-  })
+    ms("请先填写必填字段","please fill all item before you submit","e")
   })
   
 }
