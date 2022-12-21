@@ -2,7 +2,8 @@
   <div class="index_warpper">
     <div class="index_left">
   <el-menu
-    default-active="bookInfo"
+    default-active="book"
+    :router="true"
   >
     <el-menu-item index="book">
       <template #title>
@@ -16,7 +17,7 @@
         <span>{{lang? '用户管理' : 'USER'}}</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="borrowInfo">
+    <el-menu-item index="borrow">
       <el-icon><Operation /></el-icon>
       <template #title>{{lang? '借阅管理': 'BORROW'}}</template>
     </el-menu-item>
@@ -68,11 +69,11 @@ const changeActive = (item: "bookInfo" | "userInfo") => {
 
 
 
-console.log(route.params.role);
+// console.log(route.params.role);
 
-(async function test() {
-  console.log(await isAdmin("yzxyzx"))
-})()
+// (async function test() {
+//   console.log(await isAdmin("yzxyzx"))
+// })()
 
 
 

@@ -90,29 +90,26 @@ const ruleFormRef = ref<FormInstance>()
 const checkAccount = (rule: any, value: string, callback: any) => {
   const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
   if (value === '') {
-    callback(new Error('Please input the account'))
-  } else if (value.length > 10) {
-    callback(new Error("account length must less than 10"))
+    callback(new Error(lang? '请输入账户名': 'Please input the account'))
+  } else if (value.length > 18) {
+    callback(new Error(lang? '账户名必须小于18位': "account length must less than 18"))
   } else if (value.length < 2) {
-    callback(new Error("account length must more than 2 character"))
+    callback(new Error(lang? '账户名最少为2位': "account length must more than 2 character"))
   } 
   else if (pattern.test(value)) {
-    callback(new Error())
+    callback(new Error(lang? '账户名不能包含特殊字符': 'account could not contain special character'))
   } else {
     callback()
   }
 }
 
 const checkPassword = (rule: any, value: string, callback: any) => {
-  const pattern = new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
-  if (value === '') {
-    callback(new Error('Please input the password code'))
+  if (!value) {
+    callback(new Error(lang? '请输入密码': 'Please input the password code'))
   } else if (value.length > 18) {
-    callback(new Error("password length must less than 18"))
-  } else if (pattern.test(value)) {
-    callback(new Error("password can't contain special character"))
+    callback(new Error(lang? '密码必须少于18位': "password length must less than 18"))
   } else if (value.length < 6) {
-    callback(new Error("password must more than 6 character"))
+    callback(new Error(lang? '密码必须大于六位': "password must more than 6 character"))
   }else {
     callback()
   }
@@ -120,9 +117,9 @@ const checkPassword = (rule: any, value: string, callback: any) => {
 const checkVerifyCode = (rule: any, value: string, callback: any) => {
   value = formLabelAlign.checkCode
   if (value === '') {
-    callback(new Error('Please input the check code'))
+    callback(new Error(lang? '请输入验证码': 'Please input the check code'))
   } else if (value.length > 10) {
-    callback(new Error("check code length must less than 10"))
+    callback(new Error(lang? '验证码必须小于10位': "check code length must less than 10"))
   } else {
     callback()
   }

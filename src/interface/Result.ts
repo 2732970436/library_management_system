@@ -5,13 +5,12 @@ export default interface Result<T = any> extends AxiosResponse {
   data:{
     code:number,
     data:T,
-    message:string
+    message:string,
+    messageE:string
   };
-  message:string;
   status: number;
   statusText: string;
   headers: AxiosResponseHeaders;
   config: AxiosRequestConfig<any>;
   request?: any;
-   
 }

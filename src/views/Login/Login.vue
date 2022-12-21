@@ -41,19 +41,11 @@ const login = (para:{account:String,password:String,type:"Student" | "Admin",che
       const token = res.headers.token;
        let code:number = res.data.code;
        if (code != 200) {
-         ms({
-         message: res.data.message,
-         type: 'error',
-         showClose:true
-       })  
+         ms(res.data.message, res.data.messageE, "e")  
        } else {
-        ms({
-         message: res.data.message,
-         type: 'success',
-         showClose:true
-        })
+        ms(res.data.message,res.data.messageE, "s")
         window.localStorage.setItem("token",token)
-        router.replace(`index/${para.type.toLowerCase()}/bookInfo`);
+        router.replace(`index/${para.type.toLowerCase()}`);
         }
     }).finally(() => {
       loading.close();
@@ -65,6 +57,7 @@ const login = (para:{account:String,password:String,type:"Student" | "Admin",che
     router.push("/register")
   }
 
+ 
 </script>
 <style scoped>
   .login_warp {
@@ -75,3 +68,6 @@ const login = (para:{account:String,password:String,type:"Student" | "Admin",che
   }
 
 </style>
+
+
+

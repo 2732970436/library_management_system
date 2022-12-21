@@ -72,8 +72,6 @@ export function ms(chinese: string, english: string, mytype: 's' | 'w' | 'i' | '
 
 export function ms(chinese: MessageOptions | string, english?: string, mytype?: 's' | 'w' | 'i' | 'e', options?: MessageOptions) {
 
-
-
     //如果第一个参数为字符串，则表示是新版
     if (typeof chinese === "string") {
         // 如果用户没有传指定的options,则准备一个默认的options对象
@@ -98,7 +96,7 @@ export function ms(chinese: MessageOptions | string, english?: string, mytype?: 
         ElMessage(options)
         // 如果第一个参数是对象，则兼容ELmessage写法
     } else if (typeof chinese === "object") {
-        ElMessage(options)
+        ElMessage(chinese)
     }
 
 

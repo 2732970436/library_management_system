@@ -30,12 +30,12 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/index/children/admin/Admin.vue'),
         children:[
           {
-            path: 'bookInfo',
+            path: 'book',
             name: 'BookInfo',
             component: () => import('@/components/admin/book/admin_body_book_info.vue')
           },
           {
-            path: 'userInfo',
+            path: 'user',
             name: 'UserInfo',
             component: () => import('@/components/admin/user/admin_body_user_info.vue')
           }
