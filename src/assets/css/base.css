@@ -58,4 +58,19 @@ a {
 html{
   touch-action:none;
   touch-action:pan-y;
-  }
+}
+
+.el-table .w {
+  --el-table-tr-bg-color: var(--el-color-warning-light-8);
+}
+
+.el-table .s {
+  --el-table-tr-bg-color: var(--el-color-success-light-8);
+}
+.el-table .e {
+  --el-table-tr-bg-color: var(--el-color-error-light-3);
+}
+
+.el-table .i {
+  --el-table-tr-bg-color: var(--el-color-info-light-8);
+}

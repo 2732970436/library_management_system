@@ -1,17 +1,16 @@
 import { InjectionKey } from 'vue'
 import { createStore, useStore as baseUseStore, Store, ModuleTree } from 'vuex'
-import { BookC } from '@/interface/Book'
-import { ElMessage } from 'element-plus'
-import { addBook, delBook, getBooks, updateBook , getBooksByPage} from '@/network/book'
 
 import bookModule, { bookState } from './module/bookModule'
 import globalConfigModule, { GlobalConfigState } from './module/globalConfigModule'
-import userModule, {UserState} from './module/userModule'
+import profileModule, {ProfileState} from './module/profileModule'
+import usersModule, { userState } from './module/usersModule'
 
 export interface State {
   book: bookState,
   config:GlobalConfigState,
-  user: UserState
+  profile: ProfileState,
+  user: userState
 }
 
 // export store
@@ -21,7 +20,8 @@ export const store = createStore<State>({
   modules:{
     book:bookModule as ModuleTree<State>,
     config:globalConfigModule as ModuleTree<State>,
-    user:userModule as ModuleTree<State>
+    profile:profileModule as ModuleTree<State>,
+    user:usersModule as ModuleTree<userState>
   },
   actions:{
   

@@ -1,39 +1,57 @@
+import { BookC } from "@/interface/Book";
 import Result from "@/interface/Result";
+import { User } from "@/interface/User";
+import { store } from "@/store";
 import axios from "axios";
 import url from "./network_url";
 
-export function getLogin(info:{account:String,password:String,type:"Student" | "Admin",checkCode:string}) {
-   return axios({
-      url:url+"/library/api/user",
-      method:"get",
-      params:{
-        checkCode:info.checkCode,
-          account:info.account,
-        password:info.password,
-        role:info.type=="Admin" ? 1 : 0,
-      },
-    }) as unknown as Promise<Result>
-}
+const userUrl = url + "/library/user"
 
-export function getRegister(info: { account: string, password: string, type: "Student" | "Admin", email: string }): Promise<Result> {
+export function updateUser(users: Array<User>):Promise<Result> {
   return axios({
-    url: url+'/library/api/user',
-    method:"post",
-    data: {
-      account: info.account,
-      password: info.password,
-      role: info.type === "Admin" ? 1 : 0,
-      email: info.email
-    }
-  }) as unknown as Promise<Result>
+    url: userUrl,
+    method: "patch",
+    data: users
+  }) as any
 }
 
-export function checkAccountIsExist(account:string, role:number) {
-   return axios({
-     url: url + `/library/api/user/${account}/${role}`
-   }) as unknown as Promise<Result>
+export function addUser(users: Array<User>):Promise<Result> {
+  return axios({
+    url: userUrl,
+    method: "post",
+    data: users
+  }) as any
 }
 
-export function isAdmin(account:string) :Promise<Result> {
-     return checkAccountIsExist(account,1);
+/**
+ * 
+ * @param ids 即将被删除的ID下标
+ * @returns Result
+ */
+
+export function delUsers(ids: Array<number>):Promise<Result> {
+  return axios({
+    url:userUrl,
+    method:"delete",
+    data: ids
+  }) as any 
+} 
+
+/**
+ * 测试接口，请勿调用！！！
+ * @returns 所有用户
+ */
+export function getUsers():Promise<Result> {
+  return axios.get(userUrl) as any;
+}
+
+/**
+ * 分页查询
+ * @param page 要查询的页数
+ * @param size 单页大小，默认为store.state.user.userPageSize()
+ * @returns {code, books, message}
+ */
+
+export function getUsersByPage(page: number, size:number = store.state.user.usersPageSize):Promise<Result> {
+  return axios.get(userUrl + `/${page}/${size}`);
 }

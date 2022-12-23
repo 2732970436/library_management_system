@@ -1,9 +1,9 @@
 import {ms} from "@/tools/message"
 import { StoreOptions } from "vuex";
 
-const userModule:StoreOptions<UserState>  = {
+const profileModule:StoreOptions<ProfileState>  = {
       state: {
-        role: 0,
+       role: 0,
        account: "",
        email: "",
        phone:""
@@ -24,7 +24,7 @@ const userModule:StoreOptions<UserState>  = {
   }
     
     // 为了使用vuex的时候bookstate能有类型
-    export interface UserState {
+    export interface ProfileState {
       /**
        * lang为语言选择，0为英文，1为中文
        */
@@ -34,4 +34,4 @@ const userModule:StoreOptions<UserState>  = {
        phone:string
     }
 
-export default userModule;
+export default profileModule;

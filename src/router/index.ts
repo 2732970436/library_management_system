@@ -31,13 +31,18 @@ const routes: Array<RouteRecordRaw> = [
         children:[
           {
             path: 'book',
-            name: 'BookInfo',
+            name: 'book',
             component: () => import('@/components/admin/book/admin_body_book_info.vue')
           },
           {
             path: 'user',
-            name: 'UserInfo',
+            name: 'user',
             component: () => import('@/components/admin/user/admin_body_user_info.vue')
+          },
+          {
+            path:'setting',
+            name: 'setting',
+            component: () => import('@/components/common/setting.vue')
           }
         ]
       },

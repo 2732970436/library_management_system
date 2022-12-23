@@ -10,7 +10,8 @@ const bookModule:StoreOptions<bookState> = {
         isUpdate:false,
         delIds:new Set<number>(),
         currentPage:0,
-        bookCounts:0
+        bookCounts:0,
+        bookPageSize:10
       },
       mutations:{
         /**
@@ -76,8 +77,10 @@ const bookModule:StoreOptions<bookState> = {
         },
         setBookCount(state,count:number) {
            state.bookCounts = count
+        },
+        changeBookPageSize(state, size:number) {
+          state.bookPageSize = size;
         }
-    
       },
       actions:{
          updateBookPage(context, page:number) {
@@ -131,6 +134,12 @@ const bookModule:StoreOptions<bookState> = {
               context.commit("cleanIds");
               // 重新从服务器上获取数据，可能导致性能变差，后期优化
               context.dispatch("getBooksFromNet", context.state.currentPage);
+            } else {
+              values.forEach((item) => {
+                if (item.data.code != 200) {
+                  ms(item.data.message, item.data.messageE, "e")
+                }
+               })
             }
          }).catch((values) => {
            ms("操作失败","Operate failure","e")
@@ -145,7 +154,8 @@ const bookModule:StoreOptions<bookState> = {
       isUpdate:boolean,
       delIds:Set<number>,
       currentPage:number,
-      bookCounts:number
+      bookCounts:number,
+      bookPageSize:number
     }
 
 export default bookModule;

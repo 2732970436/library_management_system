@@ -46,9 +46,10 @@ export function getBooks() {
 /**
  * 分页查询
  * @param page 要查询的页数
+ * @param size 单页大小，默认为store.state.book.bookPageSize()
  * @returns {code, books, message}
  */
 
-export function getBooksByPage(page: number) {
-  return axios.get(`${url}/library/book/${page}/${store.state.config.bookPageSize}`);
+export function getBooksByPage(page: number, size:number = store.state.book.bookPageSize) {
+  return axios.get(`${url}/library/book/${page}/${size}`);
 }

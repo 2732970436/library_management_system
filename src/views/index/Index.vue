@@ -2,7 +2,7 @@
   <div class="index_warpper">
     <div class="index_left">
   <el-menu
-    default-active="book"
+    :default-active="defaultActive"
     :router="true"
   >
     <el-menu-item index="book">
@@ -51,7 +51,7 @@ import {
 } from '@element-plus/icons-vue'
 import {useRoute, useRouter} from 'vue-router'
 
-import {isAdmin} from "@/network/user"
+import {isAdmin} from "@/network/profile"
 import { store } from '@/store';
 
 const route = useRoute();
@@ -61,21 +61,7 @@ const router = useRouter();
 
 const lang = computed(() => store.state.config.lang)
 
-
-// 改变页面状态
-const changeActive = (item: "bookInfo" | "userInfo") => {
-    
-}
-
-
-
-// console.log(route.params.role);
-
-// (async function test() {
-//   console.log(await isAdmin("yzxyzx"))
-// })()
-
-
+const defaultActive = route.name
 
 
 

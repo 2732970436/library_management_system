@@ -48,7 +48,7 @@
 import { computed, reactive, ref } from 'vue'
 import Title from '@/components/common/tab_bar.vue';
 
-import { getRegister } from '@/network/user';
+import { getRegister } from '@/network/profile';
 import { ElMessage } from 'element-plus';
 import router from '@/router';
 import { ms } from '@/tools/message';

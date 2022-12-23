@@ -100,9 +100,6 @@ const bookForm = ref<FormInstance>();
 
 let dialogFormVisible = ref(false);
 
-const priceFlag = ref(true);
-
-const storeFlag = ref(true);
 
 const updateButtonFlag = ref(true)
 // 定义是否让添加组件显示的flag,false为不显示，true为显示
@@ -115,7 +112,9 @@ const currentPage = ref<number>(1)
 
 //-----------------初始化变量结束------------------------//
 onMounted(() => {
-  document.querySelector(".book_info_wrapper .el-pagination__goto")!.innerHTML = lang? '跳转至': 'goto';
+  watch(() => lang, () => {
+    document.querySelector(".book_info_wrapper .el-pagination__goto")!.innerHTML = lang? '跳转至': 'goto';
+  })
 })
 
 

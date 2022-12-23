@@ -4,7 +4,6 @@ import { StoreOptions } from "vuex";
 const globalConfigModule:StoreOptions<GlobalConfigState>  = {
       state: {
         lang:1,
-        bookPageSize:10,
       },
       mutations:{
         /**
@@ -15,9 +14,7 @@ const globalConfigModule:StoreOptions<GlobalConfigState>  = {
         changeLang(state:GlobalConfigState ,lang:number) {
            state.lang = lang;
         },
-        changeBookPageSize(state, size:number) {
-          state.bookPageSize = size;
-        }
+        
       },
       actions:{
          
@@ -30,7 +27,6 @@ const globalConfigModule:StoreOptions<GlobalConfigState>  = {
        * lang为语言选择，0为英文，1为中文
        */
        lang:number,
-       bookPageSize:number
     }
 
 export default globalConfigModule;

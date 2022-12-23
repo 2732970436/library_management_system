@@ -18,7 +18,7 @@
 <script lang="ts" setup>
 import Title from "@/components/common/tab_bar.vue"
 import Login from "@/components/login.vue"
-import {getLogin} from "@/network/user"
+import {getLogin} from "@/network/profile"
 import { useRouter, useRoute } from 'vue-router'
 import { ElLink, ElLoading } from "element-plus";
 import { ms } from "@/tools/message";
@@ -45,7 +45,7 @@ const login = (para:{account:String,password:String,type:"Student" | "Admin",che
        } else {
         ms(res.data.message,res.data.messageE, "s")
         window.localStorage.setItem("token",token)
-        router.replace(`index/${para.type.toLowerCase()}`);
+        router.replace(`index/${para.type.toLowerCase()}/book`);
         }
     }).finally(() => {
       loading.close();
