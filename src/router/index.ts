@@ -40,6 +40,16 @@ const routes: Array<RouteRecordRaw> = [
             component: () => import('@/components/admin/user/admin_body_user_info.vue')
           },
           {
+            path:'borrowedRecord',
+            name: 'borrow',
+            component: () => import('@/components/admin/borrowedRecord/borrowedRecord.vue')
+          },
+          {
+            path:'profile',
+            name: 'profile',
+            component: () => import('@/components/common/profile.vue')
+          },
+          {
             path:'setting',
             name: 'setting',
             component: () => import('@/components/common/setting.vue')

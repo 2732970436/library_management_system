@@ -17,7 +17,7 @@
         <span>{{lang? '用户管理' : 'USER'}}</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="borrow">
+    <el-menu-item index="BorrowedRecord">
       <el-icon><Operation /></el-icon>
       <template #title>{{lang? '借阅管理': 'BORROW'}}</template>
     </el-menu-item>
@@ -25,7 +25,7 @@
       <el-icon><Setting /></el-icon>
       <template #title>{{lang? '系统设置': 'SETTING'}}</template>
     </el-menu-item>
-    <el-menu-item index="4">
+    <el-menu-item index="profile">
       <el-icon><UserFilled /></el-icon>
       <template #title>{{lang? '个人资料': 'PROFILE'}}</template>
     </el-menu-item>

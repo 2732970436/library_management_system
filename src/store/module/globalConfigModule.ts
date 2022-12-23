@@ -3,7 +3,7 @@ import { StoreOptions } from "vuex";
 
 const globalConfigModule:StoreOptions<GlobalConfigState>  = {
       state: {
-        lang:1,
+        lang: window.localStorage.getItem("lang") ? window.localStorage.getItem("lang") as unknown as number - 0 : 1,
       },
       mutations:{
         /**
@@ -13,6 +13,7 @@ const globalConfigModule:StoreOptions<GlobalConfigState>  = {
          */
         changeLang(state:GlobalConfigState ,lang:number) {
            state.lang = lang;
+           window.localStorage.setItem("lang", lang.toString());
         },
         
       },

@@ -10,7 +10,6 @@
   max-height="70vh"
    :data="filterTableData" 
    style="width: 100%; display: flex; overflow: hidden;"
-   v-infinite-scroll="load"
    :row-class-name="tableRowClassName"
     border
    >
@@ -67,12 +66,14 @@ import { ref,computed,reactive } from 'vue';
 import tabBar from '@/components/common/tab_bar.vue';
 import { useStore } from '@/store';
 
-import {lang, l} from "@/tools/lang"
+import {l} from "@/tools/lang"
 import { ms } from '@/tools/message';
+
 
 
 const store = useStore();
 
+const lang = store.state.config.lang
 // 搜索变量
 const search = ref('')
 
@@ -96,11 +97,6 @@ users.filter(
       data.account.toLowerCase().includes(search.value.toLowerCase())
   )
 )
-
-const load = () => {
-  console.log(1);
-  
-}
 
 
 // 当用户点击编辑时将查找该条记录的index并插入到User的index属性中
