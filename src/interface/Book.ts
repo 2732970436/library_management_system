@@ -27,7 +27,6 @@ export class BookC implements Book {
   public isUpdate:boolean = false;
   public content:string = "";
   public isAdd: boolean = true;
- 
  }
 
 

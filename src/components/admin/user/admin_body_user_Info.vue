@@ -2,7 +2,7 @@
   <div class="user_info_warpper">
   <tab-bar>
     <template #title>
-      <span style="margin: auto;">{{lang? '用户管理': 'User management'}}</span>
+      <h4 style="margin: auto;">{{lang? '用户管理': 'User management'}}</h4>
     </template>
   </tab-bar>
     <div class="user_info_table_warpper">

@@ -80,6 +80,12 @@ const bookModule:StoreOptions<bookState> = {
         },
         changeBookPageSize(state, size:number) {
           state.bookPageSize = size;
+        },
+        borrow(state, book:BookC) {
+          let index = state.books.findIndex(item =>item === book)
+
+          state.books[index].remain -= 1;
+
         }
       },
       actions:{
@@ -93,7 +99,7 @@ const bookModule:StoreOptions<bookState> = {
          * @param context 
          * @param page 页数
          */
-        getBooksFromNet(context, page:number) {
+        getBooksFromNet(context, page:number = context.state.currentPage) {
           const l = ld("加载数据中","loading data",true)
           getBooksByPage(page).then((res) => {
             // 将服务器返回的书籍替换当前的书籍

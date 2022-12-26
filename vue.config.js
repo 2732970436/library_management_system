@@ -3,7 +3,7 @@ module.exports = {
     ? '/'
     : '/',
     // outputDir:"../server/src/main/resources/static"
-    outputDir: "dist"
+    outputDir: "library",
     
 }
 

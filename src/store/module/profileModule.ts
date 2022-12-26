@@ -1,21 +1,19 @@
+import { User } from "@/interface/User";
 import {ms} from "@/tools/message"
 import { StoreOptions } from "vuex";
 
 const profileModule:StoreOptions<ProfileState>  = {
       state: {
-       role: 0,
-       account: "",
-       email: "",
-       phone:""
+        user: JSON.parse(window.localStorage.getItem("user") ? window.localStorage.getItem("user")!: "{}")
       },
       mutations:{
         /**
          * 
          * @param state 上下文
-         * @param role 当前登录身份
+         * @param user 用户 
          */
-        changeRole(state, role:number) {
-           state.role = role;
+         changeProfile(state,user:User) {
+          state.user = user;
         }
       },
       actions:{
@@ -28,10 +26,7 @@ const profileModule:StoreOptions<ProfileState>  = {
       /**
        * lang为语言选择，0为英文，1为中文
        */
-       role:number,
-       account:string,
-       email:string,
-       phone:string
+       user?:User
     }
 
 export default profileModule;

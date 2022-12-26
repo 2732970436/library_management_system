@@ -46,7 +46,7 @@
           <el-input v-model.number="tempBook.remain" autocomplete="off" type="number" />
         </el-form-item>
         
-        <el-form-item :label="lang ? '价格' : 'Price'" :label-width="'140px'" prop="price">
+        <el-form-item :label="lang ? '价格(￥)' : 'Price(￥)'" :label-width="'140px'" prop="price">
           <el-input v-model.number="tempBook.price" autocomplete="off" type="number" />
         </el-form-item>
       </el-form>
@@ -75,7 +75,7 @@ import Tab_bar from "@/components/common/tab_bar.vue";
 
 
 import { Delete, Edit, CirclePlus } from "@element-plus/icons-vue"
-import { ref, computed, reactive, watch, onMounted } from 'vue';
+import { ref, computed, reactive, watch, onMounted, watchEffect, nextTick } from 'vue';
 import { Book, BookC } from "@/interface/Book";
 import { useStore } from '@/store';
 import { mb, ms } from '@/tools/message';
@@ -96,6 +96,8 @@ const tempBook = ref<BookC>(
   new BookC()
 );
 
+ const pagedom = ref()
+
 const bookForm = ref<FormInstance>();
 
 let dialogFormVisible = ref(false);
@@ -111,11 +113,13 @@ let books = store.state.book.books
 const currentPage = ref<number>(1)
 
 //-----------------初始化变量结束------------------------//
-onMounted(() => {
-  watch(() => lang, () => {
-    document.querySelector(".book_info_wrapper .el-pagination__goto")!.innerHTML = lang? '跳转至': 'goto';
+watchEffect(async () => {
+  nextTick(() => {
+    if (document.querySelector(".book_info_wrapper .el-pagination__goto")) {
+      document.querySelector(".book_info_wrapper .el-pagination__goto")!.innerHTML = lang.value? '跳转至': 'goto';
+    }
+  })  
   })
-})
 
 
 //-----------------回调事件开始--------------------------//
@@ -216,7 +220,6 @@ const checkName = (rule:any, value:string, callback:Function) => {
    if (overlap) {
       callback(new Error(lang ? '书名已经存在': "The name must not be same as current"))
    } else if (!value) {
-    console.log(value)
       callback(new Error(lang? '书名为必填' : 'book name must not be null'))
    } else {
     callback()
@@ -255,7 +258,6 @@ const checkStore = (rule: any, value: any, callback: any) => {
 
 
 const checkRemain = (rule: any, value: any, callback: any) => {
-  console.log(value)
   if (!value && value != 0) {
     callback(new Error(lang? '请输入可借量' :'Please input the remain'))
   } else if (!Number.isInteger(value)) {

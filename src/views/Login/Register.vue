@@ -1,36 +1,39 @@
 <template>
- 
   <Title>
     <template #title>
-      {{}}
+     <h4 style="margin: auto;">{{lang? '注册界面': 'Register'}}</h4> 
+    </template>
+    <template #suffix>
+        <el-button style="margin: auto;" type="primary" size="large" @click="backLogin()">{{lang? '登录': 'Sign In'}}</el-button>
     </template>
   </Title>
-  <el-radio-group v-model="labelPosition" label="label position">
-  </el-radio-group>
   <div style="margin: 20px" />
   <div class="register_warp">
   <el-form
-    :label-position="labelPosition"
+    :label-position="'right'"
     label-width="100px"
-    :model="formLabelAlign"
+    :model="user"
     style="max-width: 460px"
     :rules="rule"
     @validate = "validate"
   >
     <el-form-item :label="lang? '账户名': 'Account'" prop="account">
-      <el-input v-model="formLabelAlign.account" maxlength="18" minlength="2" clearable class="input_item"/>
+      <el-input v-model="user.account" maxlength="18" minlength="2" clearable class="input_item"/>
     </el-form-item>
     <el-form-item :label="lang? '密码' : 'Password'" prop="password">
-      <el-input v-model="formLabelAlign.password" type="password" maxlength="18" minlength="6" clearable class="input_item"/>
+      <el-input v-model="user.password" type="password" maxlength="18" minlength="6" clearable class="input_item"/>
     </el-form-item>
     <el-form-item :label="lang? '确认密码': 'ConfirmPassword'" prop="ensurePassword">
-      <el-input  type="password" v-model="formLabelAlign.ensurePassword" clearable></el-input>
+      <el-input  type="password" v-model="user.ensurePassword" clearable></el-input>
     </el-form-item>
     <el-form-item :label="lang? '邮箱地址': 'Email'" prop="email">
-      <el-input v-model="formLabelAlign.email" :placeholder="lang? '你可以选择是否填写该字段': 'You can choose not to fill in this field'" clearable></el-input>
+      <el-input v-model="user.email"  clearable></el-input>
+    </el-form-item>
+    <el-form-item :label="lang? '电话号码': 'Phone'" prop="phone">
+      <el-input v-model="user.phone" :placeholder="lang? '你可以选择是否填写该字段': 'You can choose not to fill in this field'" clearable></el-input>
     </el-form-item>
     <el-form-item :label="lang? '身份': 'Identity'">
-      <el-select v-model="formLabelAlign.type" class="select" :placeholder="lang? '选择你的身份': 'choose your identity'" size="large" :collapse-tags="true">
+      <el-select v-model="user.role" class="select" :placeholder="lang? '选择你的身份': 'choose your identity'" size="large" :collapse-tags="true">
     <el-option
       v-for="item in options"
       :key="item.value"
@@ -49,34 +52,74 @@ import { computed, reactive, ref } from 'vue'
 import Title from '@/components/common/tab_bar.vue';
 
 import { getRegister } from '@/network/profile';
-import { ElMessage } from 'element-plus';
 import router from '@/router';
 import { ms } from '@/tools/message';
 import { store } from '@/store';
+import { RegisterUser, User } from '@/interface/User';
 
 const lang = computed(() => store.state.config.lang)
 
-interface Format {
-  account: string,
-  password: string,
-  type: "Student" | "Admin",
-  ensurePassword:string,
-  email:string
-}
-const labelPosition = ref('right')
-const formLabelAlign = reactive<Format>({
-  account: '',
-  password: '',
-  type: "Student",
-  ensurePassword:"",
-  email:""
-})
+
+const user = reactive<RegisterUser>(new RegisterUser())
 
 const accountFlag = ref(false);
 const passwordFlag = ref(false);
 const ensurePasswordFlag = ref(false);
 const emailFLag = ref(true)
 const registerButtonFlag = ref(false);
+
+const options = [
+  {
+    value: 0,
+    label: lang? '学生': 'Student',
+  },
+  {
+    value: 1,
+    label: lang? '管理员': 'Admin',
+  }
+]
+
+const register = () => {
+  getRegister(user).then((res) => {
+    const {message, messageE, code, data} = res.data;
+    switch(code) {
+      case 200: ms(message, messageE, "s");
+      backLogin()
+      break;
+      default:ms(message, messageE, "w");
+      break;
+    }
+  }).catch((err) => {
+    ms("发生了一些错误", "There is soething wrong", "e")
+  })
+}
+
+
+const backLogin = () => {
+  router.push("/")
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const checkAccount = (rule:any,value:string,callback:any) => {
   if (!value.match("^[a-zA-Z0-9|#|@|\.]+$")) {
     accountFlag.value = false;
@@ -104,7 +147,7 @@ const checkPassword = (rule:any,value:string,callback:any) => {
 }
 
 const checkEnsurePassword = (rule:any,value:string,callback:any) => {
-  if (value === formLabelAlign.password) {
+  if (value === user.password) {
     ensurePasswordFlag.value = true;
     callback()
   } else {
@@ -121,7 +164,10 @@ const  checkEmail = (rule:any,value:string,callback:any) => {
   } else if (value) {
     emailFLag.value = false
     callback(new Error(lang? '错误的邮件格式': "The email format is wrong"));
-  } else {
+  } else if (!value) {
+    callback(new Error(lang? '邮箱必须填写': "The email is required"));
+  } 
+  else{
     emailFLag.value = true;
     callback();
   }
@@ -133,43 +179,7 @@ const rule = reactive({
   ensurePassword:[{validator:checkEnsurePassword,trigger:"blur"}],
   email:[{validator:checkEmail,trigger:"blur"}]
 })
-const options = [
-  {
-    value: 'Student',
-    label: lang? '学生': 'Student',
-  },
-  {
-    value: 'Admin',
-    label: lang? '管理员': 'Admin',
-  }
-]
 
-const register = () => {
-  getRegister(formLabelAlign).then((res) => {
-    const code = res.data.code;
-    const token = res.headers.token;
-    switch(code) {
-      case 200: ms({
-      message:res.data.message,
-      type:"success"
-    }); 
-    window.localStorage.setItem("token", token);
-    if (formLabelAlign.type === "Student") {
-      router.replace("/index/student/bookInfo")
-    } else if (formLabelAlign.type === "Admin") {
-      router.replace("/index/admin/bookInfo")
-    }
-      break;
-      default: ms({
-      message:res.data.message,
-      type:"warning"
-    });
- 
-    }
-  }).catch((err) => {
-    ms("服务器错误", "There is something wrong", "e")
-  })
-}
 
 const validate = () => {
   if (accountFlag.value && passwordFlag.value && ensurePasswordFlag.value && emailFLag.value) {

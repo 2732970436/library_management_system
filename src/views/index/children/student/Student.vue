@@ -1,174 +1,88 @@
 <template>
-  <div>
-  <el-table :data="filterTableData" height="70%" style="width:100%" >
-    <el-table-column type="selection" width="55" />
-    <el-table-column prop="bookName" label="Name" style="width:20vw"/>
-    <el-table-column prop="store" label="Store" style="width:20vw"/>
-    <el-table-column prop="author" label="Author" style="width:20vw"/>
-    <el-table-column prop="price" label="Price" style="width:20vw"/>
-    <el-table-column>
-      <template #header>
-        <el-input v-model="search" size="small" placeholder="search by name" />
-      </template>
-      <template #default="scope">
-        <el-button text @click="bookEdit(scope.$index,scope.row)"
-    >borrow</el-button
-  >
-        <el-button
-          size="small"
-          type="danger"
-          @click="bookDelete(scope.$index, scope.row)"
-          >Delete</el-button
-        >
-      </template>
-    </el-table-column>
-  </el-table>
+  <div class="index_warpper">
+    <div class="index_left">
+      <el-menu
+:default-active="defaultActive"
+:router="true"
+>
+<el-menu-item index="books">
+  <el-icon><Collection /></el-icon>
+  <template #title>
+    <span>{{lang? '书籍借阅' : 'BOOK'}}</span>
+  </template>
+</el-menu-item>
+
+
+<el-menu-item index="borrows">
+  <el-icon><Collection /></el-icon>
+  <template #title>
+    <span>{{lang? '借阅管理' : 'BORROW'}}</span>
+  </template>
+
+</el-menu-item>
+
+<el-menu-item index="settings">
+  <el-icon><Setting /></el-icon>
+  <template #title>{{lang? '系统设置': 'SETTING'}}</template>
+</el-menu-item>
+
+<el-menu-item index="profiles">
+  <el-icon><UserFilled /></el-icon>
+  <template #title>{{lang? '个人资料': 'PROFILE'}}</template>
+</el-menu-item>
+</el-menu>
+</div>
+
+<div class="index_right">
+ <router-view></router-view>
+</div>
 </div>
 </template>
 
 <script lang="ts" setup>
 
-import { ElMessage } from 'element-plus';
-import { ref,computed,reactive } from 'vue';
-import {Book,BookC} from "@/interface/Book"
-import { useStore } from '@/store';
-const store = useStore();
-// 搜索变量
-const search = ref('')
-// 放置修改的临时数据
-const tempBook = ref<BookC>(
-  new BookC()
-);
+import { computed, ref } from 'vue'
+import {
+  Setting,
+  Collection,
+  Operation,
+  UserFilled,
+  User
+} from '@element-plus/icons-vue'
+import {useRoute, useRouter} from 'vue-router'
 
+import {isAdmin} from "@/network/profile"
+import { store } from '@/store';
 
-let dialogFormVisible = ref(false);
-
-const priceFlag = ref(true);
-
-const storeFlag = ref(true);
-
-const updateButtonFlag = ref(true)
-
-let books = store.state.book.books
-
-// 搜索数据行
-const filterTableData = computed(() =>
-  books.filter(
-    (data) =>
-      !search.value ||
-      data.bookName.toLowerCase().includes(search.value.toLowerCase())
-  )
-)
-
-  const bookEdit = (index:number,info:Book) => {
-    let i = books.findIndex((item) => {
-      return info === item;
-    })
-    tempBook.value = JSON.parse(JSON.stringify(info));
-    tempBook.value.isUpdate = true;
-    tempBook.value.index = i;
-    if (info.isAdd) {
-      ElMessage({
-        message:"you must submit your All modify before you do this",
-        type:"error",
-        showClose:true
-      })
-    } else {
-    dialogFormVisible.value = true
-    }
-  }
-
-  const EditCancel = () => {
-    dialogFormVisible.value = false;
-    ElMessage({
-    message: 'operate cancel',
-    type: 'info',
-    showClose:true
-  })
-  }
-
-  const EditConfirm = ()=> {
-    dialogFormVisible.value = false;
-    store.commit("updateFlag",true)
-    store.commit("modifyBook",{index:tempBook.value.index,newBook:tempBook.value})
-    ElMessage({
-    message: 'Update Success',
-    type: 'success',
-    showClose:true
-  })
-  }
-
-  const checkPrice = (rule: any, value: number, callback: any) => {
-  if (value === null) {
-    priceFlag.value = false
-    return callback(new Error('Please input the price'))
-  }  else if (value < 0) {
-        priceFlag.value = false
-        callback(new Error('Price must be greater than 0'))
-      } else if (value > 1000) {
-        priceFlag.value = false;
-        callback(new Error("Price must not getter than 1000"))
-      }
-      else {
-        priceFlag.value = true
-        callback()
-      }
-    }
-
-const checkStore = (rule: any, value: number, callback: any) => {
-  if (value === null) {
-    storeFlag.value = false
-    callback(new Error('Please input the Store'))
-  } else if (!Number.isInteger(value)) {
-    storeFlag.value = false
-    callback(new Error("Please Enter A Number"))
-  }  else if (value <0) {
-    storeFlag.value = false
-       callback(new Error("Please Enter A Positive Number"))
-  } else if(value > 100000) {
-    storeFlag.value = false;
-    callback("the store must not getter than 100000")
-  }
-  else  {
-    storeFlag.value = true
-    callback()
-  }
-}
-// 规则
-const rules = reactive({
-  store: [{ validator: checkStore, trigger: 'blur' }],
-  price: [{ validator: checkPrice, trigger: 'blur' }],
-})
+const route = useRoute();
+const router = useRouter();
 
 
 
-// 全局注册事件确定提交可不可以
-const vaildate = (prop:string,isVaild:boolean) => {
-  if (priceFlag.value && storeFlag.value) {
-    updateButtonFlag.value = true
-  } else [
-    updateButtonFlag.value = false
-  ]
-}
+const lang = computed(() => store.state.config.lang)
+
+const defaultActive = route.name
 
 
-// 处理删除操作
-const bookDelete = (index:number,row:BookC) => {
-   if (row.isAdd) {
-      ElMessage({
-        message:"you must submit your All modify before you do this",
-        type:"error",
-        showClose:true
-      })
-   } else {
-    let i = books.findIndex((item) => item === row)
-    store.commit("deleteBook",i)
-    store.commit("updateFlag",true)
-   }
-   
-}
 
-const submitUpdate = () => {
- store.dispatch("updateBooks")
-}
 </script>
+
+<style scoped>
+  .index_warpper {  
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .index_left {
+    flex: 1;
+  }
+
+  .index_right {
+    flex:5
+  }
+
+
+
+
+</style>

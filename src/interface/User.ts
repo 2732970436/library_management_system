@@ -13,3 +13,13 @@ export class User{
     public index:number = -1;
     public isAdd:boolean = false;
 }
+
+export class LoginUser extends User {
+    checkCode = "";
+}
+
+export class RegisterUser extends User {
+    ensurePassword = ""
+  }
+  
+
