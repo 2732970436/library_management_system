@@ -36,7 +36,7 @@
         <el-input v-model="tempUser.account" autocomplete="off" />
       </el-form-item>
       <el-form-item :label="l('密码' ,'password')" :label-width="'140px'">
-        <el-input v-model="tempUser.password" autocomplete="off" />
+        <el-input v-model="tempUser.passwordLocal" autocomplete="off" />
       </el-form-item>
       <el-form-item :label="l('邮件', 'email')" :label-width="'140px'">
         <el-input v-model="tempUser.email" autocomplete="off" />

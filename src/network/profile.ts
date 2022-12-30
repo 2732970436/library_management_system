@@ -42,3 +42,15 @@ export function checkAccountIsExist(account: string, role: number) {
 export function isAdmin(account: string): Promise<Result> {
   return checkAccountIsExist(account, 1);
 }
+
+export function updateProfile(user:User): Promise<Result> {
+  const localpassword = user.passwordLocal;
+ if (localpassword) {
+  user.password = md5(localpassword)
+ }
+  return axios({
+    url: url + '/library/api/profile',
+    data: user,
+    method: "patch"
+  }) as unknown as any
+}

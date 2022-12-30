@@ -1,13 +1,18 @@
-import { BookC } from "@/interface/Book";
 import Result from "@/interface/Result";
 import { User } from "@/interface/User";
 import { store } from "@/store";
 import axios from "axios";
+import md5 from "js-md5";
 import url from "./network_url";
 
 const userUrl = url + "/library/user"
 
 export function updateUser(users: Array<User>):Promise<Result> {
+  users.forEach((item) => {
+    if (item.passwordLocal) {
+      item.password = md5(item.passwordLocal);
+    }
+  })
   return axios({
     url: userUrl,
     method: "patch",
@@ -16,6 +21,11 @@ export function updateUser(users: Array<User>):Promise<Result> {
 }
 
 export function addUser(users: Array<User>):Promise<Result> {
+  users.forEach((item) => {
+    if (item.passwordLocal) {
+      item.password = md5(item.passwordLocal);
+    }
+  })
   return axios({
     url: userUrl,
     method: "post",
@@ -54,4 +64,8 @@ export function getUsers():Promise<Result> {
 
 export function getUsersByPage(page: number, size:number = store.state.user.usersPageSize):Promise<Result> {
   return axios.get(userUrl + `/${page}/${size}`);
+}
+
+export function getUsersByAccount(account:string): Promise<Result>  {
+  return axios.get(userUrl + `/${account}`);
 }

@@ -70,7 +70,7 @@ const routes: Array<RouteRecordRaw> = [
           },
           {
             path:'borrowedRecord',
-            name: 'borrow',
+            name: 'borrowedRecord',
             component: () => import('@/components/admin/borrowedRecord/borrowedRecord.vue')
           },
           {

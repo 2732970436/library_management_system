@@ -1,4 +1,5 @@
 export interface borrowRecord {
+     borrowDaysLocal: number;
       id:number;
       bookId:number;
       bookName:string
@@ -6,6 +7,7 @@ export interface borrowRecord {
       userId:number;
       userName:string;
       startTime:string;
+      startTimeLocal:string
       returnStatus:number;
       borrowDays:number;
       remainDays:number;
@@ -17,3 +19,9 @@ export interface borrowRecord {
       approvalStatus:0 | 1 | 2;
       approvalStatusLocal:"待审批" | "审批通过" | "未被批准"
 }
+
+export interface Query {
+      user?: number | null,
+      book?: number | null,
+}
+    

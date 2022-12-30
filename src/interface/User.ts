@@ -12,6 +12,9 @@ export class User{
     public isUpdate:boolean = false;
     public index:number = -1;
     public isAdd:boolean = false;
+    public enrollTime:string = "";
+    public borrowCount:number = 0;
+    public passwordLocal:string | undefined = undefined; 
 }
 
 export class LoginUser extends User {
@@ -20,6 +23,6 @@ export class LoginUser extends User {
 
 export class RegisterUser extends User {
     ensurePassword = ""
-  }
+}
   
 

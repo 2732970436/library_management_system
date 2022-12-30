@@ -4,9 +4,6 @@ import axios from "axios";
 import url from "./network_url";
 
 
-
-
-
 export function updateBook(books: Array<BookC>) {
   return axios({
     url: url + "/library/book",
@@ -52,4 +49,8 @@ export function getBooks() {
 
 export function getBooksByPage(page: number, size:number = store.state.book.bookPageSize) {
   return axios.get(`${url}/library/book/${page}/${size}`);
+}
+
+export function getBooksByBookName(bookName:string) {
+  return axios.get(`${url}/library/book/${bookName}`);
 }

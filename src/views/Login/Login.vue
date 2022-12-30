@@ -80,7 +80,6 @@ const login = (form: FormInstance | undefined) => {
         const token = res.headers.token;
         ms(message,messageE, "s")
         window.localStorage.setItem("token", token)
-        user.password = "";
         window.localStorage.setItem("user", JSON.stringify(user))
         store.commit("changeProfile", user);
         user.role ? router.push("/index/admin/book") : router.push("/index/student/books")  

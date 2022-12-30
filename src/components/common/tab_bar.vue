@@ -13,24 +13,33 @@
   </div>
 
   <div class="tab_bar_suffix" @click="$emit('tabClick', 'suffix')">
-    <slot name="suffix"></slot>
+    <slot name="suffix">
+     <div style="margin: auto;">
+        <el-avatar :size="62" :src="avatarUrl"/>
+    </div>
+    </slot>
   </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { User } from '@/interface/User';
 import router from '@/router';
 import { store } from '@/store';
 import { ElMessage } from 'element-plus';
+import url from "@/network/network_url"
 import { computed, ref } from 'vue'
 
 const lang = computed(() => store.state.config.lang)
 
 const emit = defineEmits();
 
+const user = ref<User>(JSON.parse(JSON.stringify(store.state.profile.user!)))
+let avatarUrl = `${url}/library/api/profile/avatar/img/${user.value?.id}`
 const suffixClick = () => {
 
 }
+
 
 </script>
 

@@ -17,7 +17,7 @@
         <span>{{lang? '用户管理' : 'USER'}}</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="BorrowedRecord">
+    <el-menu-item index="borrowedRecord">
       <el-icon><Operation /></el-icon>
       <template #title>{{lang? '借阅管理': 'BORROW'}}</template>
     </el-menu-item>

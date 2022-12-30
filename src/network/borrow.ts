@@ -1,9 +1,12 @@
 import { Book } from "@/interface/Book";
-import { borrowRecord } from "@/interface/borrowRecord";
+import { borrowRecord, Query } from "@/interface/borrowRecord";
 import Result from "@/interface/Result";
 import { User } from "@/interface/User";
+import { store } from "@/store";
 import axios from "axios";
+import _ from "lodash";
 import url from "./network_url";
+
 
 const borrowUrl = url + "/library/borrow"
 
@@ -40,8 +43,8 @@ export function delUsers(ids: Array<number>):Promise<Result> {
  * 
  * @returns 
  */
-export function getBorrowRecords():Promise<Result<Array<borrowRecord>>> {
-  return axios.get(borrowUrl) as any;
+export function getBorrowRecords(userId:number = store.state.profile.user!.id):Promise<Result<Array<borrowRecord>>> {
+  return axios.get(borrowUrl + `/${userId}`) as any;
 }
 
 
@@ -50,4 +53,26 @@ export function returnBookNet(id:number):Promise<Result<any>> {
     url:borrowUrl+"/"+id,
     method:"patch",
   }) as any
+}
+
+export function getBooksByPage(page: number, size:number):{records:Promise<Result<Array<borrowRecord>>>} {
+  return axios.get(`${borrowUrl}/${page}/${size}`) as any;
+}
+
+export function getBorrowRecordsByCondition(query:Query, page:number, size:number = 10):Promise<Result> {
+  query = _.cloneDeep(query);
+  if (!query.book) query.book = -1;
+  if (!query.user) query.user = -1;
+  return axios({
+    url: borrowUrl + `s/${query.user}/${query.book}/${page}/${size}`,
+    method:"get",
+  }) as any
+}
+
+export function putRecordsToNet(borrowRecord:borrowRecord) {
+  return axios({
+    method:"put",
+    data:borrowRecord,
+    url:borrowUrl+"s"
+  })
 }
