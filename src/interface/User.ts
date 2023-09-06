@@ -10,11 +10,13 @@ export class User{
      */
     public status: 0 | 1 | 2 = 0;
     public isUpdate:boolean = false;
+    public salary: number = 2000;
     public index:number = -1;
     public isAdd:boolean = false;
     public enrollTime:string = "";
-    public borrowCount:number = 0;
-    public passwordLocal:string | undefined = undefined; 
+    public passwordLocal:string | undefined = undefined;
+    public dept:string = ''
+    public statusLocal: '正常' | '异常' = '正常'
 }
 
 export class LoginUser extends User {
@@ -24,5 +26,5 @@ export class LoginUser extends User {
 export class RegisterUser extends User {
     ensurePassword = ""
 }
-  
+
 

@@ -1,10 +1,9 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === 'production'
+  publicPath: process.env.NODE_ENV === 'development'
     ? '/'
     : '/',
     // outputDir:"../server/src/main/resources/static"
-    outputDir: "library",
-    
+    outputDir: "salary",
 }
 
 //vue.config.js

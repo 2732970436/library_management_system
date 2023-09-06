@@ -6,7 +6,7 @@ import url from "./network_url";
 
 export function getLogin<T = any>(info: LoginUser): Promise<Result<T>> {
   return axios({
-    url: url + "/library/api/profile",
+    url: url + "/salary/api/profile",
     method: "get",
     params: {
       checkCode: info.checkCode,
@@ -16,31 +16,33 @@ export function getLogin<T = any>(info: LoginUser): Promise<Result<T>> {
     },
   }) as unknown as Promise<Result>
 }
-console.log(md5('123456'));
 
 
 export function getRegister(info: User): Promise<Result> {
   return axios({
-    url: url + '/library/api/profile',
+    url: url + '/salary/api/profile',
     method: "post",
     data: {
       account: info.account,
       password: md5(info.password),
       role: info.role,
       email: info.email,
-      phone: info.phone
+      phone: info.phone,
+      dept:info.dept
     }
   }) as unknown as Promise<Result>
 }
 
-export function checkAccountIsExist(account: string, role: number) {
-  return axios({
-    url: url + `/library/api/profile/${account}/${role}`
-  }) as unknown as Promise<Result>
+export async function checkAccountIsExist(account: string, role: number){
+  const result = await axios({
+    url: url + `/salary/api/profile/${account}/${role}`
+  })
+  return result.data.code === 200
+
 }
 
-export function isAdmin(account: string): Promise<Result> {
-  return checkAccountIsExist(account, 1);
+export async function isAdmin(account: string) {
+  return await checkAccountIsExist(account, 1);
 }
 
 export function updateProfile(user:User): Promise<Result> {
@@ -49,7 +51,7 @@ export function updateProfile(user:User): Promise<Result> {
   user.password = md5(localpassword)
  }
   return axios({
-    url: url + '/library/api/profile',
+    url: url + '/salary/api/profile',
     data: user,
     method: "patch"
   }) as unknown as any

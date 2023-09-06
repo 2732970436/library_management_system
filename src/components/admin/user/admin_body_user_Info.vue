@@ -16,15 +16,21 @@
     <el-table-column prop="account"  resizable show-overflow-tooltip :label="lang? '账户': 'account'" style="flex: 2"/>
     <el-table-column prop="email" resizable show-overflow-tooltip :label="lang? '邮箱': 'email'" style="flex: 3"/>
     <el-table-column prop="phone" resizable show-overflow-tooltip :label="lang? '手机号': 'phone'" style="flex: 2"/>
-    <el-table-column prop="status" resizable show-overflow-tooltip :label="lang? '状态(1借书未还,2黑名单)': 'status'" style="flex: 1"/>
+    <el-table-column prop="statusLocal" resizable show-overflow-tooltip :label="lang? '状态': 'status'" style="flex: 1">
+        <template #default="scope">
+            <el-tag :type="scope.row.statusLocal == '正常'? 'success': 'danger'" size="small">{{scope.row.statusLocal}}</el-tag>
+        </template>
+    </el-table-column>
+    <el-table-column prop="dept" resizable show-overflow-tooltip :label="lang? '部门': 'dept'" style="flex: 1"/>
+    <el-table-column prop="salary" resizable show-overflow-tooltip :label="lang? '工资': 'salary'" style="flex: 1"/>
     <el-table-column>
       <template #header>
         <el-input v-model="search" size="small" :placeholder="lang? '按名字搜索': 'search by name'" />
         </template>
       <template #default="scope">
         <div style="display: flex; justify-content: space-between;">
-        <el-button :icon="Edit"   @click="userEdit(scope.$index,scope.row)" style="width: 40%;"></el-button>
-        <el-button :icon="Delete" type="danger"  @click="bookDelete(scope.$index, scope.row)" style="width: 40%;"></el-button>
+        <el-button :icon="Edit as any"   @click="userEdit(scope.$index,scope.row)" style="width: 40%;"></el-button>
+        <el-button :icon="Delete as any" type="danger"  @click="salaryDelete(scope.$index, scope.row)" style="width: 40%;"></el-button>
       </div>
       </template>
     
@@ -44,6 +50,29 @@
       <el-form-item :label="l('手机号', 'phone')" :label-width="'140px'">
         <el-input v-model="tempUser.phone" autocomplete="off" />
       </el-form-item>
+      <el-form-item :label="l('部门', 'dept')" :label-width="'140px'">
+          <el-select v-model="tempUser.dept" class="m-2" placeholder="Select" size="large">
+              <el-option
+                      v-for="item in availDeptsOptions"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+              />
+          </el-select>
+      </el-form-item>
+      <el-form-item :label="l('工资', 'salary')" :label-width="'140px'">
+        <el-input v-model="tempUser.salary" autocomplete="off" />
+      </el-form-item>
+        <el-form-item :label="l('状态', 'status')" :label-width="'140px'">
+            <el-select v-model="tempUser.status" class="m-2" placeholder="Select" size="large">
+                <el-option
+                        v-for="item in statusOptions"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                />
+            </el-select>
+        </el-form-item>
     </el-form>
     <template #footer>
       <span class="dialog-footer">
@@ -62,13 +91,31 @@
 import { User } from '@/interface/User';
 import { ElMessage, FormInstance} from 'element-plus';
 import { Edit, Delete } from '@element-plus/icons-vue';
-import { ref,computed,reactive } from 'vue';
+import { ref,computed,reactive, watchEffect, watch } from 'vue';
 import tabBar from '@/components/common/tab_bar.vue';
 import { useStore } from '@/store';
 
 import {l} from "@/tools/lang"
 import { ms } from '@/tools/message';
+import {getDepts} from "@/network/dept";
+import {Dept} from "@/interface/dept";
 
+const statusOptions = [
+    {
+    value: 0,
+    label: '正常',
+  },
+  {
+    value: 1,
+    label: '冻结',
+  },
+]
+
+const availDeptsOptions = ref([])
+
+getDepts().then((res) => {
+    availDeptsOptions.value = res.data.data.map((item:Dept) =>  { return {label:item.dept, value:item.dept}})
+})
 
 
 const store = useStore();
@@ -92,11 +139,15 @@ store.dispatch("getUsersFromNet", 1)
 // 搜索数据行
 const filterTableData = computed(() =>
 users.filter(
-    (data) =>
-      !search.value ||
-      data.account.toLowerCase().includes(search.value.toLowerCase())
+    (data) => {
+      return !search.value || data.account.toLowerCase().includes(search.value.toLowerCase())
+    }
   )
 )
+
+
+
+
 
 
 // 当用户点击编辑时将查找该条记录的index并插入到User的index属性中
@@ -127,7 +178,7 @@ users.filter(
 
 
 // 处理删除操作
-const bookDelete = (index:number,row:User) => {
+const salaryDelete = (index:number,row:User) => {
    let i = users.findIndex((item) => item === row)
    store.commit("deleteUser", i);
    store.dispatch("updateusers")

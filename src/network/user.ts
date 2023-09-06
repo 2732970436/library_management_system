@@ -5,7 +5,7 @@ import axios from "axios";
 import md5 from "js-md5";
 import url from "./network_url";
 
-const userUrl = url + "/library/user"
+const userUrl = url + "/salary/user"
 
 export function updateUser(users: Array<User>):Promise<Result> {
   users.forEach((item) => {
@@ -34,7 +34,7 @@ export function addUser(users: Array<User>):Promise<Result> {
 }
 
 /**
- * 
+ *
  * @param ids 即将被删除的ID下标
  * @returns Result
  */
@@ -44,8 +44,8 @@ export function delUsers(ids: Array<number>):Promise<Result> {
     url:userUrl,
     method:"delete",
     data: ids
-  }) as any 
-} 
+  }) as any
+}
 
 /**
  * 测试接口，请勿调用！！！
@@ -59,7 +59,7 @@ export function getUsers():Promise<Result> {
  * 分页查询
  * @param page 要查询的页数
  * @param size 单页大小，默认为store.state.user.userPageSize()
- * @returns {code, books, message}
+ * @returns {code, salarys, message}
  */
 
 export function getUsersByPage(page: number, size:number = store.state.user.usersPageSize):Promise<Result> {

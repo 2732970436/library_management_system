@@ -8,7 +8,7 @@
 
   <div class = "tab_bar_title" @click="$emit('tabClick', 'title')">
       <slot name="title">
-        <h4 style="margin: auto;">{{lang? '图书管理系统': 'library management system'}}</h4>
+        <h4 style="margin: auto;">{{lang? '工资管理系统': 'salary management system'}}</h4>
       </slot>
   </div>
 
@@ -35,7 +35,7 @@ const lang = computed(() => store.state.config.lang)
 const emit = defineEmits();
 
 const user = ref<User>(JSON.parse(JSON.stringify(store.state.profile.user!)))
-let avatarUrl = `${url}/library/api/profile/avatar/img/${user.value?.id}`
+let avatarUrl = `${url}/salary/api/profile/avatar/img/${user.value?.id}`
 const suffixClick = () => {
 
 }
@@ -60,7 +60,7 @@ const suffixClick = () => {
 
 .tab_bar_prefix {
   display: flex;
-  width: 15%;
+  flex: 1;
 }
 
 
@@ -71,7 +71,8 @@ const suffixClick = () => {
 }
 
 .tab_bar_suffix {
+  min-width: 60px;
   display: flex;
-  width: 15%;
+  flex: 1;
 }
 </style>

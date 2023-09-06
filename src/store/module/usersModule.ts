@@ -107,6 +107,9 @@ const usersModule:StoreOptions<userState> = {
           // 此为获取全部用户逻辑--------------------------------
 
           getUsers().then((res) => {
+            res.data.data.forEach((user:User) => {
+               user.statusLocal = user.status == 0 ? '正常' : '异常'; 
+            })
             context.commit("replaceUsers", res.data.data)
             // ms(res.data.message, res.data.messageE, "s");
           }).finally(() => {

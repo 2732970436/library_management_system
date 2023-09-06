@@ -2,7 +2,7 @@
   <div class="home">
     <Title>
       <template #title>
-        <span style="margin:auto">{{ lang ? '图书管理系统' : 'library management system' }}</span>
+        <span style="margin:auto">{{ lang ? '工资管理系统' : 'salary management system' }}</span>
       </template>
       <template #suffix>
         <el-button style="margin: auto;" type="primary" size="large" @click="register()">{{ lang ? '注册' : 'Sign up'}}</el-button>
@@ -22,12 +22,12 @@
           <el-input v-model="user.password" clearable class="input_item" type="password" />
         </el-form-item>
         <el-form-item :label="lang ? '身份' : 'Identity'">
-          <el-select v-model="user.role" class="select" placeholder="choose your identity" size="large"
+          <el-select v-model="user.role" class="select input_item" placeholder="choose your identity" size="large"
             :collapse-tags="true">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item :label="lang ? '验证码' : 'verifyCode'" prop="verifyCode">
+        <el-form-item :label="lang ? '验证码' : 'verifyCode'" prop="verifyCode" class="check_code_wrapper">
           <el-input v-model="user.checkCode" clearable class="input_item verifycode" />
           <el-image :src='url + imgUrl' class="verify_img" @click="verifyImgChange()" />
         </el-form-item>
@@ -39,6 +39,7 @@
 </template>
 
 <script lang="ts" setup>
+
 
 import Title from "@/components/common/tab_bar.vue"
 import { getLogin } from "@/network/profile"
@@ -53,7 +54,7 @@ import url from "@/network/network_url"
 const lang = computed(() => store.state.config.lang)
 
 const labelPosition = ref('right')
-const imgUrl = ref("/library/api/checkCode");
+const imgUrl = ref("/salary/api/checkCode");
 
 
 
@@ -62,7 +63,7 @@ const user = reactive<LoginUser>(new LoginUser())
 const options = [
   {
     value: 0,
-    label: lang ? '学生' : 'Student',
+    label: lang ? '员工' : 'emp',
   },
   {
     value: 1,
@@ -82,7 +83,7 @@ const login = (form: FormInstance | undefined) => {
         window.localStorage.setItem("token", token)
         window.localStorage.setItem("user", JSON.stringify(user))
         store.commit("changeProfile", user);
-        user.role ? router.push("/index/admin/book") : router.push("/index/student/books")  
+        user.role ? router.push("/index/admin/dept") : router.push("/index/employee/salarys")
       } else {
         ms(message, messageE, "e")
       }
@@ -177,14 +178,18 @@ const rules = reactive({
   height: 32px;
 }
 
-.verifycode {
-  width: 260px;
+.check_code_wrapper {
+  width: 100vw;
+  display: flex;
+  height: 40px;
 }
 
-.select {
-  width: 360px;
-  max-width: 360px;
+
+.input_item {
+  width: 30vw;
 }
+
+
 </style>
 
 

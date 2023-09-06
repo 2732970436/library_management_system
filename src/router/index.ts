@@ -1,3 +1,7 @@
+import { checkAccountIsExist, isAdmin } from '@/network/profile'
+import { store } from '@/store'
+import { ms } from '@/tools/message'
+import { ro } from 'element-plus/es/locale'
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
 const routes: Array<RouteRecordRaw> = [
@@ -8,38 +12,43 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/login",
-    name: "Login",
+    name: "login",
     component: () => import("../views/Login/Login.vue")
   },
-  
+
   {
     path:"/register",
-    name:"Register",
+    name:"register",
     component: () => import("../views/Login/Register.vue")
   },
 
   {
     path:"/index",
-    name:"Index",
+    name:"index",
     meta:{
-      
+
     },
     component: () => import("@/views/index/Index.vue"),
     children:[
       {
-        path:"student",
-        name:"student",
-        component: () => import("@/views/index/children/student/Student.vue"),
+        path:"employee",
+        name:"employee",
+        component: () => import("@/views/index/children/employee/employee.vue"),
         children:[
           {
-            path: "books",
-            name: "books",
-            component: () => import("@/components/student/book/book.vue")
+            path: "salarys",
+            name: "salarys",
+            component: () => import("@/components/employee/audit/audit.vue")
           },
           {
-            path:"borrows",
-            name: 'borrows',
-            component: () => import("@/components/student/borrow/borrow.vue")
+            path: "salarysRecord",
+            name: "salarysRecord",
+            component: () => import("@/components/employee/salary/salary.vue")
+          },
+          {
+            path:"audits",
+            name: 'audits',
+            component: () => import("@/components/employee/employee/employee.vue")
           },
           {
             path:'profiles',
@@ -59,19 +68,24 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/views/index/children/admin/Admin.vue'),
         children:[
           {
-            path: 'book',
-            name: 'book',
-            component: () => import('@/components/admin/book/admin_body_book_info.vue')
-          },
-          {
             path: 'user',
             name: 'user',
             component: () => import('@/components/admin/user/admin_body_user_info.vue')
           },
           {
-            path:'borrowedRecord',
-            name: 'borrowedRecord',
-            component: () => import('@/components/admin/borrowedRecord/borrowedRecord.vue')
+            path: 'salaryRecord',
+            name: 'salaryRecord',
+            component: () => import('@/components/admin/salaryRecord/salaryRecord.vue')
+          },
+          {
+            path: 'dept',
+            name: 'dept',
+            component: () => import('@/components/admin/dept/dept.vue')
+          },
+          {
+            path:'auditedRecord',
+            name: 'auditedRecord',
+            component: () => import('@/components/admin/auditedRecord/auditedRecord.vue')
           },
           {
             path:'profile',
@@ -93,6 +107,38 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  const account = store.state.profile.user?.account
+  const role = store.state.profile.user?.role;
+  // 如果是去注册或登录页面则不进行拦截
+  if (to.name == "register") next();
+  else if (to.name == 'login') next();
+  // 如果账户密码存在,进一步判断，否则跳转登录页面
+  else if (account && (role || role === 0)) {
+    // 如果用户前往admin区域
+    if (to.fullPath.includes("admin") ) {
+      if (await isAdmin(account) ) {
+        next();
+      } else {
+        ms("您没有权限访问此页面", "you has not be permit", "e")
+        next({name:'login'})
+      }
+    }
+    //用户前往普通区域
+    else if (await checkAccountIsExist(account, role) ) {
+      next()
+    } else {
+      ms("您还未登录，请先登录后再试", "You are not logged in, please try again after log on first", "w");
+      // 如果用户不满足上述条件则前往login
+      next({name:'login'})
+    }
+  } else {
+    ms("您还未登录，请先登录后再试", "You are not logged in, please try again after log on first", "w");
+    next({name:"login"})
+  }
+
 })
 
 export default router

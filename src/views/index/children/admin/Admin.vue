@@ -5,22 +5,24 @@
     :default-active="defaultActive"
     :router="true"
   >
-    <el-menu-item index="book">
-      <template #title>
-        <el-icon><Collection /></el-icon>
-        <span>{{lang? '书籍管理' : 'BOOK'}}</span>
-      </template>
-    </el-menu-item>
+      <el-menu-item index="dept">
+          <el-icon><Suitcase /></el-icon>
+          <template #title>{{lang? '部门管理': 'dept'}}</template>
+      </el-menu-item>
     <el-menu-item index="user">
       <template #title>
         <el-icon><User /></el-icon>
         <span>{{lang? '用户管理' : 'USER'}}</span>
       </template>
     </el-menu-item>
-    <el-menu-item index="borrowedRecord">
+    <el-menu-item index="auditedRecord">
       <el-icon><Operation /></el-icon>
-      <template #title>{{lang? '借阅管理': 'BORROW'}}</template>
+      <template #title>{{lang? '审批管理': 'audit'}}</template>
     </el-menu-item>
+      <el-menu-item index="salaryRecord">
+          <el-icon><Operation /></el-icon>
+          <template #title>{{lang? '工资管理': 'salary management'}}</template>
+      </el-menu-item>
     <el-menu-item index="setting">
       <el-icon><Setting /></el-icon>
       <template #title>{{lang? '系统设置': 'SETTING'}}</template>
@@ -45,11 +47,11 @@
 
 import { computed, ref } from 'vue'
 import {
-  Setting,
-  Collection,
-  Operation,
-  UserFilled,
-  User
+    Setting,
+    Collection,
+    Operation,
+    UserFilled,
+    User, Suitcase
 } from '@element-plus/icons-vue'
 import {useRoute, useRouter} from 'vue-router'
 

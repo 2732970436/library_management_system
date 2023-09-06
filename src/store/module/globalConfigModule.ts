@@ -22,7 +22,7 @@ const globalConfigModule:StoreOptions<GlobalConfigState>  = {
     }
   }
     
-    // 为了使用vuex的时候bookstate能有类型
+    // 为了使用vuex的时候salarystate能有类型
     export interface GlobalConfigState {
       /**
        * lang为语言选择，0为英文，1为中文

@@ -1,7 +1,7 @@
 <template>
   <Title>
     <template #title>
-     <h4 style="margin: auto;">{{lang? '注册界面': 'Register'}}</h4> 
+     <h4 style="margin: auto;">{{lang? '注册界面': 'Register'}}</h4>
     </template>
     <template #suffix>
         <el-button style="margin: auto;" type="primary" size="large" @click="backLogin()">{{lang? '登录': 'Sign In'}}</el-button>
@@ -32,7 +32,10 @@
     <el-form-item :label="lang? '电话号码': 'Phone'" prop="phone">
       <el-input v-model="user.phone" :placeholder="lang? '你可以选择是否填写该字段': 'You can choose not to fill in this field'" clearable></el-input>
     </el-form-item>
-    <el-form-item :label="lang? '身份': 'Identity'">
+    <el-form-item :label="lang? '部门编号': 'dept'" prop="dept">
+      <el-input v-model="user.phone" :placeholder="lang? '部门号': 'dept'" clearable></el-input>
+    </el-form-item>
+    <!-- <el-form-item :label="lang? '身份': 'Identity'">
       <el-select v-model="user.role" class="select" :placeholder="lang? '选择你的身份': 'choose your identity'" size="large" :collapse-tags="true">
     <el-option
       v-for="item in options"
@@ -41,7 +44,7 @@
       :value="item.value"
     />
   </el-select>
-  </el-form-item>
+  </el-form-item> -->
   <el-button type="primary" @click="register()" :disabled ="!registerButtonFlag" >{{lang? '注册': 'Register'}}</el-button>
   </el-form>
 </div>
@@ -71,7 +74,7 @@ const registerButtonFlag = ref(false);
 const options = [
   {
     value: 0,
-    label: lang? '学生': 'Student',
+    label: lang? '员工': 'Student',
   },
   {
     value: 1,
@@ -98,25 +101,6 @@ const register = () => {
 const backLogin = () => {
   router.push("/")
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -166,7 +150,7 @@ const  checkEmail = (rule:any,value:string,callback:any) => {
     callback(new Error(lang? '错误的邮件格式': "The email format is wrong"));
   } else if (!value) {
     callback(new Error(lang? '邮箱必须填写': "The email is required"));
-  } 
+  }
   else{
     emailFLag.value = true;
     callback();

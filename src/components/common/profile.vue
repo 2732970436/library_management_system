@@ -1,7 +1,7 @@
 <template>
     <tab_bar>
         <template #prefix>
-            <el-upload :action="`${url}/library/profile/avatar/img/${user?.id}`" :headers="headers" :accept="'image/png, image/jpeg'"
+            <el-upload :action="`${url}/salary/profile/avatar/img/${user?.id}`" :headers="headers" :accept="'image/png, image/jpeg'"
                 :on-success="uploadSuccess" :before-upload="beforeUpload" :show-file-list="false"
                 :alt='l("点击上传头像", "upload image")' style="margin: auto;">
                 <el-avatar :size="62" :src="avatarUrl" v-if="freshAvatar" />
@@ -63,17 +63,29 @@
       </template>
       {{ enrollTime }}
     </el-descriptions-item>
-    <el-descriptions-item>
-      <template #label>
-        <div >
-          <el-icon class="profile_icon">
-            <Notebook />
-          </el-icon>
-          {{ l('书本借阅量', 'Book circulation') }}
-        </div>
-      </template>
-      <el-tag size="small">{{ user.borrowCount }}</el-tag>
-    </el-descriptions-item>
+            <el-descriptions-item >
+                <template #label>
+                    <div>
+                        <el-icon  class="profile_icon">
+                            <Postcard />
+                        </el-icon>
+                        {{ l('部门', 'Dept') }}
+                    </div>
+                </template>
+                <p style="text-align: center;">{{ user.dept }}</p>
+            </el-descriptions-item>
+
+            <el-descriptions-item >
+                <template #label>
+                    <div>
+                        <el-icon  class="profile_icon">
+                            <Money />
+                        </el-icon>
+                        {{ l('工资', 'salary') }}
+                    </div>
+                </template>
+                <p style="text-align: center;">{{ user.salary }}</p>
+            </el-descriptions-item>
     <el-descriptions-item >
       <template #label>
         <div>
@@ -88,7 +100,7 @@
   </el-descriptions>
     </div>
     <el-dialog v-model="dialogFormVisible" :title="lang ? '修改信息' : 'UpdateInfo'">
-        <el-form :label-position="'right'" ref="bookForm" :model="user" style="width: 100%" :rules="rule">
+        <el-form :label-position="'right'" ref="salaryForm" :model="user" style="width: 100%" :rules="rule">
             <el-form-item prop="account">
                 <el-input v-model="user.account" maxlength="18" minlength="2" disabled clearable class="input_item">
                     <template #prepend>
@@ -115,7 +127,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="EditCancel()">{{ lang ? '取消' : 'Cancel' }}</el-button>
-          <el-button :disabled="!updateButtonFlag" type="primary" @click="EditConfirm(bookForm)">{{ lang ? '确认' :
+          <el-button :disabled="!updateButtonFlag" type="primary" @click="EditConfirm(salaryForm)">{{ lang ? '确认' :
               'Confirm'
           }}</el-button>
         </span>
@@ -123,7 +135,7 @@
     </el-dialog>
 
     <el-dialog v-model="passwordFormVisible" :title="lang ? '修改密码' : 'UpdatePassword'">
-        <el-form :label-position="'right'" ref="bookForm" :model="user" style="width: 100%" :rules="rule">
+        <el-form :label-position="'right'" ref="salaryForm" :model="user" style="width: 100%" :rules="rule">
             <el-form-item prop="passwordLocal">
                 <el-input v-model="user.passwordLocal" maxlength="18" minlength="6" clearable class="input_item">
                     <template #prepend>
@@ -135,7 +147,7 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="passwordEditCancel()">{{ lang ? '取消' : 'Cancel' }}</el-button>
-          <el-button :disabled="!updateButtonFlag" type="primary" @click="passwordEditConfirm(bookForm)">{{ lang ? '确认' :
+          <el-button :disabled="!updateButtonFlag" type="primary" @click="passwordEditConfirm(salaryForm)">{{ lang ? '确认' :
               'Confirm'
           }}</el-button>
         </span>
@@ -157,18 +169,18 @@ import { computed, reactive, ref } from 'vue'
 
 import { updateProfile } from '@/network/profile';
 import { User } from '@/interface/User';
-import { Calendar, Connection, Iphone, UserFilled, Notebook } from '@element-plus/icons-vue';
+import {Calendar, Connection, Iphone, Money, Postcard, TrendCharts, UserFilled} from '@element-plus/icons-vue';
 import { FormInstance } from 'element-plus';
 import { formatDate } from '@/tools/date';
 
 const lang = computed(() => store.state.config.lang)
 const headers: Record<string, any> = { token: window.localStorage.getItem("token") }
 const user = ref<User>(JSON.parse(JSON.stringify(store.state.profile.user!)))
-let avatarUrl = `${url}/library/api/profile/avatar/img/${user.value?.id}`
+let avatarUrl = `${url}/salary/api/profile/avatar/img/${user.value?.id}`
 const freshAvatar = ref(true);
 let dialogFormVisible = ref(false);
 const updateButtonFlag = ref(true);
-const bookForm = ref<FormInstance>();
+const salaryForm = ref<FormInstance>();
 const passwordFormVisible = ref(false)
 
 
@@ -191,8 +203,8 @@ const passwordEditCancel = () => {
   ms('操作取消', 'operate cancel', "i")
 }
 
-const passwordEditConfirm = (bookForm:FormInstance| undefined) => {
-  bookForm!.validate().then(() => {
+const passwordEditConfirm = (salaryForm:FormInstance| undefined) => {
+  salaryForm!.validate().then(() => {
     updateProfile(user.value).then((res) => {
         const { message, messageE, code, data } = res.data;
         switch (code) {
@@ -216,8 +228,8 @@ const EditCancel = () => {
   ms('操作取消', 'operate cancel', "i")
 }
 
-const EditConfirm = (bookForm:FormInstance| undefined) => {
-  bookForm!.validate().then(() => {
+const EditConfirm = (salaryForm:FormInstance| undefined) => {
+  salaryForm!.validate().then(() => {
     updateProfile(user.value).then((res) => {
         const { message, messageE, code, data } = res.data;
         switch (code) {
